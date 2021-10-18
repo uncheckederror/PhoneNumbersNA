@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>Thomas Ryan</Authors>
+		<Company>Accelerate Networks</Company>
+		<Description>A library for parsing phone numbers. Built around the North American Numbering Plan and the NANPA formal specification.</Description>
+		<Copyright>Thomas Ryan</Copyright>
+		<PackageTags>Phone, Numbers, NANPA, VOIP, Telephony, NPA, NXX, XXXX</PackageTags>
+		<NeutralLanguage>en</NeutralLanguage>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<AnalysisLevel>preview</AnalysisLevel>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+</Project>
