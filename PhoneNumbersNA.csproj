@@ -12,6 +12,9 @@
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<AnalysisLevel>preview</AnalysisLevel>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType></RepositoryType>
+		<RepositoryUrl>https://github.com/uncheckederror/PhoneNumbersNA</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/uncheckederror/PhoneNumbersNA</PackageProjectUrl>
 	</PropertyGroup>
 
 </Project>
