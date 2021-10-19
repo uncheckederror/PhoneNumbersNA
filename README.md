@@ -3,7 +3,7 @@ A library for parsing phone numbers. Built around the [North American Numbering 
 
 Find this package on [NuGet](https://www.nuget.org/packages/PhoneNumbersNA/)! 🚀
 
-### Helping you Parse Phone Numbers ☎️ ###
+### Helping you Parse and Validate Phone Numbers ☎️ ###
 
 The core of this library is the 
 ```csharp
@@ -49,3 +49,11 @@ var checkTollFree = "9990221111".IsTollfree()
 to get a Boolean as an answer.
 
 This library is used in production by [Accelerate Networks](https://github.com/AccelerateNetworks/NumberSearch) and grew organically out of a large set of utility functions that have now been condensed into PhoneNumbersNA. 🥳
+### How to Contribute 🤝 ###
+Please start by creating a new issue with a description of the problem and a method to reproduce it.
+  
+### How to run this project locally 🏃 ###
+  * Clone the repo to your machine
+  * dotnet 6.0 or greater is required (included in Visual Studio 2022)
+  * Use [Visual Studio 2022 Community Edition](https://visualstudio.microsoft.com/vs/preview/) or VSCode with the dotnet CLI and CSharp language extension to edit, build, and run the test suite.
+  * Double click the "PhoneNumbersNA.sln" file to open the solution in Visual Studio 2022.
