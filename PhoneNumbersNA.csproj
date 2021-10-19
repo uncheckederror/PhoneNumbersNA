@@ -7,7 +7,7 @@
 		<Company>Accelerate Networks</Company>
 		<Description>A library for parsing phone numbers. Built around the North American Numbering Plan and the NANPA formal specification.</Description>
 		<Copyright>Thomas Ryan</Copyright>
-		<PackageTags>Phone, Numbers, NANPA, VOIP, Telephony, NPA, NXX, XXXX</PackageTags>
+		<PackageTags>Phone, Numbers, NANPA, VOIP, Telephony, NPA, NXX, XXXX, Validation, Parsing</PackageTags>
 		<NeutralLanguage>en</NeutralLanguage>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<AnalysisLevel>preview</AnalysisLevel>
@@ -15,6 +15,20 @@
 		<RepositoryType></RepositoryType>
 		<RepositoryUrl>https://github.com/uncheckederror/PhoneNumbersNA</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/uncheckederror/PhoneNumbersNA</PackageProjectUrl>
+		<Version>1.0.1</Version>
+		<PackageIcon>favicon-128.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Update="favicon-128.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Update="README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
 
 </Project>
