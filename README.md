@@ -19,7 +19,7 @@ which will return an array of 10 digit phone numbers as strings. If you prefer t
 ```csharp
 var stronglyTypedPhoneNumbers = "12060009999 15030006969 18750001111".ExtractPhoneNumbers();
 ```
-extension method to get an IEnumerable<PhoneNumber> result.
+extension method to get an ```IEnumerable<PhoneNumber>``` result.
   
 If you simply want a yes or no answer to whether a string is a valid NANP phone number you can use the 
 ```csharp
@@ -34,7 +34,7 @@ or accept integers like
 var checkValid = PhoneNumbersNA.AreaCode.ValidPhoneNumber(int npa, int nxx, int xxxx);
 ```
   
-A common scenario when working with 3rd party VOIP API's like the [Teli API](https://apidocs.teleapi.net/api/) or the [Call48 API](https://apicontrol.call48.com/apidocs#did-did-lookup-get) is to query for blocks of available phone numbers by the NPA (Area Code) prefix for those phone numbers. To support this use case this library provides a list of every active NANP Area Code as an array on integers that is accessible by calling ```PhoneNumbersNA.AreaCode.All```. If you want a list of only the active non-local, non-geographic area codes you can call ```PhoneNumbersNA.AreaCode.NonGeographic``` and similarly tollfree only Area Codes are available under ```PhoneNumbersNA.AreaCode.TollFree```. 
+A common scenario when working with 3rd party VOIP API's like the [Teli API](https://apidocs.teleapi.net/api/) or the [Call48 API](https://apicontrol.call48.com/apidocs#did-did-lookup-get) is to query for blocks of available phone numbers by the NPA (Area Code) prefix for those phone numbers. This library provides a list of every active NANP Area Code as an array on integers that is accessible by calling ```PhoneNumbersNA.AreaCode.All```. If you want a list of only the active non-local, non-geographic area codes you can call ```PhoneNumbersNA.AreaCode.NonGeographic``` and similarly tollfree only Area Codes are available under ```PhoneNumbersNA.AreaCode.TollFree```. 
   
 Some APIs require you to provide the name of the state the area code you are looking for existing within geographically. To that end you can use the ```PhoneNumbers.AreaCode.AreaCodesByState``` array to get a list of objects containing strings for both the short and long versions of state names and an array of all the area codes in that specific state.
   
