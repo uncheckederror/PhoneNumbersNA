@@ -11,7 +11,7 @@ var checkParse = PhoneNumber.TryParse(string input, out var phoneNumber);
 ```
 function that accepts a string that you would like to parse into a single phone number. It mimics the format of ```int.TryParse(string input, out var value)``` to make it easy to use and reason about. The PhoneNumber type that is return in the out variable contains variety of useful properties including a 10 digit string named DialedNumber which is what you would literally dial on a phone's keypad to place a call to that number. The components of the DialedNumber are also provided as integers to make them easy to work with and store. Please note, to convert the NPA, NXX, and XXXX properties to strings you'll need to use the ```phoneNumber.NPA.ToString("000")``` method to preserve any leading zeros that aren't represented by the integer format.
 
-For parsing a string that may contain many phone numbers use the extension method on the String class that are included in this library:
+To parse a string that may contain many phone numbers use the extension method on the String class included in this library:
 ```csharp
 var stringlyTypedPhoneNumbers = "12060009999 15030006969 18750001111".ExtractDialedNumbers();
 ```
