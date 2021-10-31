@@ -3,7 +3,7 @@ A library for parsing phone numbers. Built around the [North American Numbering 
 
 Find this package on [NuGet](https://www.nuget.org/packages/PhoneNumbersNA/)! 🚀
 
-### Helping you Parse Phone Numbers ☎️ ###
+### Helping you Parse and Validate Phone Numbers ☎️ ###
 
 The core of this library is the 
 ```csharp
@@ -11,7 +11,7 @@ var checkParse = PhoneNumber.TryParse(string input, out var phoneNumber);
 ```
 function that accepts a string that you would like to parse into a single phone number. It mimics the format of ```int.TryParse(string input, out var value)``` to make it easy to use and reason about. The PhoneNumber type that is return in the out variable contains variety of useful properties including a 10 digit string named DialedNumber which is what you would literally dial on a phone's keypad to place a call to that number. The components of the DialedNumber are also provided as integers to make them easy to work with and store. Please note, to convert the NPA, NXX, and XXXX properties to strings you'll need to use the ```phoneNumber.NPA.ToString("000")``` method to preserve any leading zeros that aren't represented by the integer format.
 
-For parsing a string that may contain many phone numbers use the extension method on the String class that are included in this library:
+To parse a string that may contain many phone numbers use the extension method on the String class included in this library:
 ```csharp
 var stringlyTypedPhoneNumbers = "12060009999 15030006969 18750001111".ExtractDialedNumbers();
 ```
@@ -19,7 +19,7 @@ which will return an array of 10 digit phone numbers as strings. If you prefer t
 ```csharp
 var stronglyTypedPhoneNumbers = "12060009999 15030006969 18750001111".ExtractPhoneNumbers();
 ```
-extension method to get an IEnumerable<PhoneNumber> result.
+extension method to get an ```IEnumerable<PhoneNumber>``` result.
   
 If you simply want a yes or no answer to whether a string is a valid NANP phone number you can use the 
 ```csharp
@@ -34,7 +34,7 @@ or accept integers like
 var checkValid = PhoneNumbersNA.AreaCode.ValidPhoneNumber(int npa, int nxx, int xxxx);
 ```
   
-A common scenario when working with 3rd party VOIP API's like the [Teli API](https://apidocs.teleapi.net/api/) or the [Call48 API](https://apicontrol.call48.com/apidocs#did-did-lookup-get) is to query for blocks of available phone numbers by the NPA (Area Code) prefix for those phone numbers. To support this use case this library provides a list of every active NANP Area Code as an array on integers that is accessible by calling ```PhoneNumbersNA.AreaCode.All```. If you want a list of only the active non-local, non-geographic area codes you can call ```PhoneNumbersNA.AreaCode.NonGeographic``` and similarly tollfree only Area Codes are available under ```PhoneNumbersNA.AreaCode.TollFree```. 
+A common scenario when working with 3rd party VOIP API's like the [Teli API](https://apidocs.teleapi.net/api/) or the [Call48 API](https://apicontrol.call48.com/apidocs#did-did-lookup-get) is to query for blocks of available phone numbers by the NPA (Area Code) prefix for those phone numbers. This library provides a list of every active NANP Area Code as an array on integers that is accessible by calling ```PhoneNumbersNA.AreaCode.All```. If you want a list of only the active non-local, non-geographic area codes you can call ```PhoneNumbersNA.AreaCode.NonGeographic``` and similarly tollfree only Area Codes are available under ```PhoneNumbersNA.AreaCode.TollFree```. 
   
 Some APIs require you to provide the name of the state the area code you are looking for existing within geographically. To that end you can use the ```PhoneNumbers.AreaCode.AreaCodesByState``` array to get a list of objects containing strings for both the short and long versions of state names and an array of all the area codes in that specific state.
   
@@ -49,3 +49,11 @@ var checkTollFree = "9990221111".IsTollfree()
 to get a Boolean as an answer.
 
 This library is used in production by [Accelerate Networks](https://github.com/AccelerateNetworks/NumberSearch) and grew organically out of a large set of utility functions that have now been condensed into PhoneNumbersNA. 🥳
+### How to Contribute 🤝 ###
+Please start by creating a new issue with a description of the problem and a method to reproduce it.
+  
+### How to run this project locally 🏃 ###
+  * Clone the repo to your machine
+  * dotnet 6.0 or greater is required (included in Visual Studio 2022)
+  * Use [Visual Studio 2022 Community Edition](https://visualstudio.microsoft.com/vs/preview/) or VSCode with the dotnet CLI and CSharp language extension to edit, build, and run the test suite.
+  * Double click the "PhoneNumbersNA.sln" file to open the solution in Visual Studio 2022.
