@@ -27,7 +27,7 @@ namespace PhoneNumbersNA.Test
 
         readonly string[] badNumbers = new string[]
         {
-                "5558675309", "0000000000", "1111111111", string.Empty,
+                "5558675309", "0000000000", "1111111111", string.Empty, "Choose..."
         };
 
         [Fact]
@@ -50,6 +50,17 @@ namespace PhoneNumbersNA.Test
             foreach (var number in phoneNumbers)
             {
                 Assert.True(number.IsValid());
+            }
+        }
+
+        [Fact]
+        public void TryParseBadNumbers()
+        {
+            foreach (var number in badNumbers)
+            {
+                var checkParse = PhoneNumber.TryParse(number, out var phoneNumber);
+
+                Assert.False(checkParse);
             }
         }
 

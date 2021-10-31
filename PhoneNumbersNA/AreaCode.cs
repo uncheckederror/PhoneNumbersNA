@@ -982,7 +982,12 @@ namespace PhoneNumbersNA
 
             var cleanedQuery = new string(converted.ToArray());
 
-            var checkTenDigit = cleanedQuery.Length == 10;
+            // This input can't be parsed, so bail out.
+            if (cleanedQuery.Length != 10)
+            {
+                number = null;
+                return false;
+            }
 
             bool checkNpa = int.TryParse(cleanedQuery.AsSpan(0, 3), out int npa);
             bool checkNxx = int.TryParse(cleanedQuery.AsSpan(3, 3), out int nxx);
@@ -990,7 +995,7 @@ namespace PhoneNumbersNA
 
             var checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
 
-            if (checkNpa && checkNxx && checkXxxx && checkTenDigit && checkValid)
+            if (checkNpa && checkNxx && checkXxxx && checkValid)
             {
                 if (cleanedQuery.IsTollfree())
                 {
