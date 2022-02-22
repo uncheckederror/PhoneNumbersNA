@@ -15,7 +15,7 @@
 		<RepositoryType></RepositoryType>
 		<RepositoryUrl>https://github.com/uncheckederror/PhoneNumbersNA</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/uncheckederror/PhoneNumbersNA</PackageProjectUrl>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 		<PackageIcon>favicon-128.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<Nullable>enable</Nullable>
