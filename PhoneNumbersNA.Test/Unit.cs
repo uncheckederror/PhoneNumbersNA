@@ -38,14 +38,35 @@ namespace PhoneNumbersNA.Test
             {
                 var checkParse = PhoneNumber.TryParse(number, out var phoneNumber);
 
-                if (checkParse)
+                if (checkParse && phoneNumber is not null)
                 {
-                    Assert.True(phoneNumber.DialedNumber.IsValidPhoneNumber());
+                    Assert.True(phoneNumber.DialedNumber?.IsValidPhoneNumber() ?? false);
+                    Assert.True(phoneNumber.IsValid());
+                }
+            }
+
+            // Alternative alias
+            numbers = Parse.AsDialedNumbers(manyNumbers);
+            foreach (var number in numbers)
+            {
+                var checkParse = PhoneNumber.TryParse(number, out var phoneNumber);
+
+                if (checkParse && phoneNumber is not null)
+                {
+                    Assert.True(phoneNumber.DialedNumber?.IsValidPhoneNumber() ?? false);
                     Assert.True(phoneNumber.IsValid());
                 }
             }
 
             var phoneNumbers = manyNumbers.ExtractPhoneNumbers();
+
+            foreach (var number in phoneNumbers)
+            {
+                Assert.True(number.IsValid());
+            }
+
+            // Alternative alias
+            phoneNumbers = Parse.AsPhoneNumbers(manyNumbers);
 
             foreach (var number in phoneNumbers)
             {
@@ -61,6 +82,7 @@ namespace PhoneNumbersNA.Test
                 var checkParse = PhoneNumber.TryParse(number, out var phoneNumber);
 
                 Assert.False(checkParse);
+                Assert.True(phoneNumber is null);
             }
         }
 
@@ -86,7 +108,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidNPAs()
         {
-            foreach (var npa in AreaCode.All)
+            foreach (var npa in AreaCode.All.Span)
             {
                 Assert.True(npa.ToString().IsValidNPA());
                 Assert.True(AreaCode.ValidNPA(npa));
@@ -97,7 +119,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidTollfreeNPAs()
         {
-            foreach (var npa in AreaCode.TollFree)
+            foreach (var npa in AreaCode.TollFree.Span)
             {
                 Assert.True(npa.ToString().IsValidNPA());
                 Assert.True(npa.ToString().IsTollfree());
@@ -114,7 +136,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidNonGeographicNPAs()
         {
-            foreach (var npa in AreaCode.NonGeographic)
+            foreach (var npa in AreaCode.NonGeographic.Span)
             {
                 Assert.True(npa.ToString().IsValidNPA());
                 Assert.True(npa.ToString().IsNonGeographic());
@@ -186,23 +208,30 @@ namespace PhoneNumbersNA.Test
             Assert.True(checkValidNumber);
             var checkParse = PhoneNumber.TryParse(input, out var phoneNumber);
             Assert.True(checkParse);
-            Assert.True(phoneNumber.DialedNumber.IsValidPhoneNumber());
-            Assert.True(AreaCode.ValidNPA(phoneNumber.NPA));
-            Assert.True(AreaCode.ValidNXX(phoneNumber.NXX));
-            Assert.True(AreaCode.ValidXXXX(phoneNumber.XXXX));
-            Assert.True(AreaCode.ValidTollfree(phoneNumber.NPA));
+            Assert.True(phoneNumber is not null);
+            if (phoneNumber is not null)
+            {
+                Assert.True(phoneNumber.DialedNumber?.IsValidPhoneNumber() ?? false);
+                Assert.True(AreaCode.ValidNPA(phoneNumber.NPA));
+                Assert.True(AreaCode.ValidNXX(phoneNumber.NXX));
+                Assert.True(AreaCode.ValidXXXX(phoneNumber.XXXX));
+                Assert.True(AreaCode.ValidTollfree(phoneNumber.NPA));
+            }
         }
 
         [Fact]
         public void CodesByState()
         {
-            foreach (var state in AreaCode.States)
+            foreach (var state in AreaCode.States.Span)
             {
-                foreach (var code in state.AreaCodes)
+                if (state.AreaCodes is not null)
                 {
-                    Assert.True(AreaCode.ValidNPA(code));
-                    Assert.False(AreaCode.ValidNonGeographic(code));
-                    Assert.False(AreaCode.ValidTollfree(code));
+                    foreach (var code in state.AreaCodes)
+                    {
+                        Assert.True(AreaCode.ValidNPA(code));
+                        Assert.False(AreaCode.ValidNonGeographic(code));
+                        Assert.False(AreaCode.ValidTollfree(code));
+                    }
                 }
             }
         }
