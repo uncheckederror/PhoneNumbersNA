@@ -20,6 +20,12 @@ which will return an array of 10 digit phone numbers as strings. If you prefer t
 var stronglyTypedPhoneNumbers = "12060009999 15030006969 18750001111".ExtractPhoneNumbers();
 ```
 extension method to get an ```IEnumerable<PhoneNumber>``` result.
+
+Alternatively you can call the parsing methods directly using:
+```csharp
+var stringlyTypedPhoneNumbers = PhoneNumbersNA.Parse.AsDialedNumbers("12060009999 15030006969 18750001111");
+var stronglyTypedPhoneNumbers = PhoneNumbersNA.Parse.AsPhoneNumbers("12060009999 15030006969 18750001111");
+```
   
 If you simply want a yes or no answer to whether a string is a valid NANP phone number you can use the 
 ```csharp
@@ -49,6 +55,9 @@ var checkTollFree = "9990221111".IsTollfree()
 to get a Boolean as an answer.
 
 This library is used in production by [Accelerate Networks](https://github.com/AccelerateNetworks/NumberSearch) and grew organically out of a large set of utility functions that have now been condensed into PhoneNumbersNA. 🥳
+
+Update 2/22/2022: Discussion of updates and improvements version 1.0.4 in this [Twitter thread.](https://twitter.com/UncheckedError/status/1496217725559005186)
+
 ### How to Contribute 🤝 ###
 Please start by creating a new issue with a description of the problem and a method to reproduce it.
   
