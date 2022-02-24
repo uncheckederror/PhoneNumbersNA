@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Linq;
+using System.Text;
 
 namespace PhoneNumbersNA
 {
@@ -21,23 +23,23 @@ namespace PhoneNumbersNA
         /// All in service NANPA NPAs (Area Codes).
         /// https://nationalnanpa.com/enas/geoAreaCodeNumberReport.do
         /// </summary>
-        public static readonly ReadOnlyMemory<int> All = new int[]
+        public static readonly int[] All = new int[]
         {
-            201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,223,224,225,226,227,228,229,231,234,235,239,240,242,246,248,249,250,251,252,253,254,256,260,262,263,264,267,268,269,270,272,274,276,278,279,281,283,284,289,
+            201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,223,224,225,226,227,228,229,231,234,235,236,239,240,242,246,248,249,250,251,252,253,254,256,260,262,263,264,267,268,269,270,272,274,276,278,279,281,283,284,289,
             301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,323,325,326,327,330,331,332,334,336,337,339,340,341,343,345,346,347,351,352,360,361,364,365,367,368,380,381,385,386,387,
-            401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,423,424,425,428,430,431,432,434,435,437,438,440,441,442,443,445,447,450,456,458,463,464,468,469,470,473,474,475,478,479,480,484,
-            500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,530,531,532,533,534,535,538,539,540,541,544,548,551,559,561,562,563,564,566,567,570,571,573,574,575,577,578,579,580,581,584,585,586,588,
+            401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,423,424,425,428,430,431,432,434,435,437,438,440,441,442,443,445,447,448,450,456,458,463,464,468,469,470,473,474,475,478,479,480,484,
+            500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,527,530,531,532,533,534,535,538,539,540,541,544,548,551,559,561,562,563,564,566,567,570,571,572,573,574,575,577,578,579,580,581,582,584,585,586,587,588,
             600,601,602,603,604,605,606,607,608,609,610,612,613,614,615,616,617,618,619,620,622,623,626,628,629,630,631,636,639,640,641,646,647,649,650,651,657,658,659,660,661,662,664,667,669,670,671,672,678,679,680,681,682,683,684,689,
-            700,701,702,703,704,705,706,707,708,709,710,711,712,713,714,715,716,717,718,719,720,721,724,725,726,727,730,731,732,734,737,740,742,743,747,753,754,757,758,760,762,763,765,767,769,770,772,773,774,775,778,779,780,781,782,784,785,786,787,
+            700,701,702,703,704,705,706,707,708,709,710,711,712,713,714,715,716,717,718,719,720,721,724,725,726,727,730,731,732,734,737,740,742,743,747,753,754,757,758,760,762,763,765,767,769,770,771,772,773,774,775,778,779,780,781,782,784,785,786,787,
             800,801,802,803,804,805,806,807,808,809,810,811,812,813,814,815,816,817,818,819,820,825,828,829,830,831,832,833,838,839,840,843,844,845,847,848,849,850,854,855,856,857,858,859,860,862,863,864,865,866,867,868,869,870,872,873,876,877,878,879,888,889,
-            900,901,902,903,904,905,906,907,908,909,910,912,913,914,915,916,917,918,919,920,925,927,928,929,930,931,934,935,936,937,938,939,940,941,947,949,951,952,954,956,959,970,971,972,973,978,979,980,984,985,986,989
+            900,901,902,903,904,905,906,907,908,909,910,912,913,914,915,916,917,918,919,920,925,927,928,929,930,931,934,935,936,937,938,939,940,941,945,947,949,951,952,954,956,959,970,971,972,973,978,979,980,984,985,986,989
         };
 
         /// <summary>
         /// All in service NANPA Tollfree NPAs (Area Codes).
         /// https://nationalnanpa.com/enas/nonGeoNpaServiceReport.do
         /// </summary>
-        public static readonly ReadOnlyMemory<int> TollFree = new int[]
+        public static readonly int[] TollFree = new int[]
         {
             800, 833, 844, 855, 866, 877, 888
         };
@@ -46,10 +48,50 @@ namespace PhoneNumbersNA
         /// All in service NANPA Non-geographics NPAs (Area Codes) including tollfree numbers.
         /// https://nationalnanpa.com/enas/nonGeoNpaServiceReport.do
         /// </summary>
-        public static readonly ReadOnlyMemory<int> NonGeographic = new int[]
+        public static readonly int[] NonGeographic = new int[]
         {
-            500, 521, 522, 523, 524, 525, 526, 533, 544, 566, 577, 588, 600, 622, 700, 710, 800, 833, 844, 855, 866, 877, 888, 900
+            500, 521, 522, 523, 524, 525, 526, 527, 533, 544, 566, 577, 588, 600, 622, 700, 710, 800, 833, 844, 855, 866, 877, 888, 900
         };
+
+        public static bool[] AllFlatLookup = AllFlat();
+        public static bool[] TollFreeFlatLookup = TollFreeFlat();
+        public static bool[] NonGeographicFlatLookup = NonGeographicFlat();
+
+        public static bool[] AllFlat()
+        {
+            var array = new bool[999];
+
+            foreach (var code in All)
+            {
+                array[code] = true;
+            }
+
+            return array;
+        }
+
+        public static bool[] TollFreeFlat()
+        {
+            var array = new bool[999];
+
+            foreach (var code in TollFree)
+            {
+                array[code] = true;
+            }
+
+            return array;
+        }
+
+        public static bool[] NonGeographicFlat()
+        {
+            var array = new bool[999];
+
+            foreach (var code in NonGeographic)
+            {
+                array[code] = true;
+            }
+
+            return array;
+        }
 
         public class AreaCodesByState
         {
@@ -61,7 +103,7 @@ namespace PhoneNumbersNA
         /// <summary>
         /// NANPA AreaCodes by Location https://nationalnanpa.com/enas/geoAreaCodeNumberReport.do
         /// </summary>
-        public static readonly ReadOnlyMemory<AreaCodesByState> States = new AreaCodesByState[]
+        public static readonly AreaCodesByState[] States = new AreaCodesByState[]
         {
             new AreaCodesByState
             {
@@ -522,18 +564,7 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidNonGeographic(int npa)
         {
-            if (npa >= 200 && npa <= 999)
-            {
-                foreach (var toll in NonGeographic.Span)
-                {
-                    if (toll == npa)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return NonGeographicFlatLookup[npa];
         }
 
         /// <summary>
@@ -545,7 +576,7 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
             {
-                var checkParse = int.TryParse(npa.AsSpan(), out var nongeo);
+                var checkParse = int.TryParse(npa, out var nongeo);
 
                 if (checkParse)
                 {
@@ -582,18 +613,7 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidTollfree(int npa)
         {
-            if (npa >= 200 && npa <= 999)
-            {
-                foreach (var toll in TollFree.Span)
-                {
-                    if (toll == npa)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return TollFreeFlatLookup[npa];
         }
 
         /// <summary>
@@ -605,7 +625,7 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
             {
-                var checkParse = int.TryParse(npa.AsSpan(), out var toll);
+                var checkParse = int.TryParse(npa, out var toll);
 
                 if (checkParse)
                 {
@@ -643,18 +663,7 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidNPA(int npa)
         {
-            if (npa >= 200 && npa <= 999)
-            {
-                foreach (var code in All.Span)
-                {
-                    if (code == npa)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return AllFlatLookup[npa];
         }
 
         /// <summary>
@@ -666,7 +675,7 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
             {
-                var checkParse = int.TryParse(npa.AsSpan(), out var code);
+                var checkParse = int.TryParse(npa, out var code);
 
                 if (checkParse)
                 {
@@ -712,7 +721,7 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(nxx) && nxx.Length == 3)
             {
-                var checkParse = int.TryParse(nxx.AsSpan(), out var office);
+                var checkParse = int.TryParse(nxx, out var office);
                 if (checkParse)
                 {
                     return ValidNXX(office);
@@ -756,7 +765,7 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(xxxx) && xxxx.Length == 4)
             {
-                var checkParse = int.TryParse(xxxx.AsSpan(), out var vanity);
+                var checkParse = int.TryParse(xxxx, out var vanity);
 
                 if (checkParse)
                 {
@@ -823,7 +832,7 @@ namespace PhoneNumbersNA
 
             // Parse the query.
             var converted = new List<char>();
-            foreach (var letter in input.AsSpan())
+            foreach (var letter in input)
             {
                 // Allow digits.
                 if (char.IsDigit(letter))
@@ -839,14 +848,12 @@ namespace PhoneNumbersNA
             }
 
             // Drop leading 1's to improve the copy/paste experiance.
-            if (converted.Count > 0 && converted[0] == '1' && converted.Count >= 10)
+            if (converted.Count > 0 && converted[0] == '1' && converted.Count > 10)
             {
                 converted.Remove('1');
             }
 
-            var cleanedQuery = new string(converted.ToArray());
-
-            return ValidPhoneNumber(cleanedQuery);
+            return ValidPhoneNumber(converted.ToArray().AsSpan().ToString());
         }
 
         /// <summary>
@@ -866,9 +873,9 @@ namespace PhoneNumbersNA
                     .Replace(" ", "")
                     .Replace(",", " ")
                     .Replace("\r\n", " ")
-                    .Split(' ');
+                    .Split();
 
-                foreach (var query in numberCanidates.AsSpan())
+                foreach (var query in numberCanidates)
                 {
                     // Parse the query.
                     var converted = new List<char>();
@@ -883,39 +890,49 @@ namespace PhoneNumbersNA
                     }
 
                     // Drop leading 1's to improve the copy/paste experiance.
-                    if (converted.Count > 0 && converted.Count >= 10 && converted[0] == '1')
+                    if (converted.Count > 0 && converted.Count > 10 && converted[0] == '1')
                     {
                         converted.Remove('1');
                     }
 
-                    // Only if its a perfect number do we want to query for it.
+                    // Only if its a perfect number do we want to return it.
                     if (converted.Count == 10)
                     {
-                        parsedNumbers.Add(new string(converted.ToArray()));
+                        parsedNumbers.Add(converted.ToArray().AsSpan().ToString());
                     }
                 }
             }
             return parsedNumbers;
         }
+
         public static IEnumerable<PhoneNumber> ExtractPhoneNumbers(this string str)
         {
             var parsedNumbers = new List<PhoneNumber>();
 
             if (!string.IsNullOrWhiteSpace(str))
             {
-                var numberCanidates = str.Trim()
+                var cleanedInput = str.Trim()
                     .Replace(") ", "")
                     .Replace("(", "")
                     .Replace(" ", "")
                     .Replace(",", " ")
                     .Replace("\r\n", " ")
-                    .Split(' ');
+                    .AsSpan();
 
-                foreach (var query in numberCanidates.AsSpan())
+                var sliceIndex = 0;
+                var query = new ReadOnlySpan<char>();
+                while (sliceIndex > -1)
                 {
+                    sliceIndex = cleanedInput.IndexOf(' ');
+                    if (sliceIndex != -1)
+                    {
+                        query = cleanedInput[..sliceIndex];
+                        cleanedInput = cleanedInput[(sliceIndex + 1)..];
+                    }
+
                     // Parse the query.
                     var converted = new List<char>();
-                    foreach (var letter in query.AsSpan())
+                    foreach (var letter in query)
                     {
                         // Allow digits.
                         if (char.IsDigit(letter))
@@ -926,7 +943,7 @@ namespace PhoneNumbersNA
                     }
 
                     // Drop leading 1's to improve the copy/paste experiance.
-                    if (converted.Count > 0 && converted.Count >= 10 && converted[0] == '1')
+                    if (converted.Count > 0 && converted.Count > 10 && converted[0] == '1')
                     {
                         converted.Remove('1');
                     }
@@ -934,7 +951,7 @@ namespace PhoneNumbersNA
                     // Only if its a perfect number do we want to query for it.
                     if (converted.Count == 10)
                     {
-                        var checkParse = PhoneNumber.TryParse(new string(converted.ToArray()), out var phoneNumber);
+                        var checkParse = PhoneNumber.TryParseExact(converted, out var phoneNumber);
                         if (checkParse && phoneNumber is not null)
                         {
                             parsedNumbers.Add(phoneNumber);
@@ -965,12 +982,18 @@ namespace PhoneNumbersNA
 
         public static bool TryParse(string input, out PhoneNumber? number)
         {
+            // Fail fast
+            if (input.Length < 10)
+            {
+                number = null;
+                return false;
+            }
+
             // Clean up the query.
             input = input.Trim().ToLowerInvariant();
 
-            // Parse the query.
             var converted = new List<char>();
-            foreach (var letter in input.AsSpan())
+            foreach (var letter in input)
             {
                 // Allow digits.
                 if (char.IsDigit(letter))
@@ -986,33 +1009,33 @@ namespace PhoneNumbersNA
             }
 
             // Drop leading 1's to improve the copy/paste experiance.
-            if (converted.Count > 0 && converted[0] == '1' && converted.Count >= 10)
+            if (converted.Count > 0 && converted[0] == '1' && converted.Count > 10)
             {
                 converted.Remove('1');
             }
 
-            var cleanedQuery = new string(converted.ToArray());
-
             // This input can't be parsed, so bail out.
-            if (cleanedQuery.Length != 10)
+            if (converted.Count != 10)
             {
                 number = null;
                 return false;
             }
 
-            bool checkNpa = int.TryParse(cleanedQuery.AsSpan(0, 3), out int npa);
-            bool checkNxx = int.TryParse(cleanedQuery.AsSpan(3, 3), out int nxx);
-            bool checkXxxx = int.TryParse(cleanedQuery.AsSpan(6, 4), out int xxxx);
+            var cleanedQuery = converted.ToArray().AsSpan();
+
+            bool checkNpa = int.TryParse(cleanedQuery.Slice(0, 3), out int npa);
+            bool checkNxx = int.TryParse(cleanedQuery.Slice(3, 3), out int nxx);
+            bool checkXxxx = int.TryParse(cleanedQuery.Slice(6, 4), out int xxxx);
 
             var checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
 
             if (checkNpa && checkNxx && checkXxxx && checkValid)
             {
-                if (cleanedQuery.IsTollfree())
+                if (AreaCode.ValidTollfree(npa))
                 {
                     number = new PhoneNumber
                     {
-                        DialedNumber = cleanedQuery,
+                        DialedNumber = cleanedQuery.ToString(),
                         NPA = npa,
                         NXX = nxx,
                         XXXX = xxxx,
@@ -1020,11 +1043,11 @@ namespace PhoneNumbersNA
                         DateIngested = DateTime.Now
                     };
                 }
-                else if (cleanedQuery.IsNonGeographic())
+                else if (AreaCode.ValidNonGeographic(npa))
                 {
                     number = new PhoneNumber
                     {
-                        DialedNumber = cleanedQuery,
+                        DialedNumber = cleanedQuery.ToString(),
                         NPA = npa,
                         NXX = nxx,
                         XXXX = xxxx,
@@ -1036,7 +1059,65 @@ namespace PhoneNumbersNA
                 {
                     number = new PhoneNumber
                     {
-                        DialedNumber = cleanedQuery,
+                        DialedNumber = cleanedQuery.ToString(),
+                        NPA = npa,
+                        NXX = nxx,
+                        XXXX = xxxx,
+                        Type = NumberType.Local,
+                        DateIngested = DateTime.Now
+                    };
+                }
+
+                return true;
+            }
+            else
+            {
+                number = null;
+                return false;
+            }
+        }
+
+        public static bool TryParseExact(IEnumerable<char> input, out PhoneNumber? number)
+        {
+            var cleanedQuery = input.ToArray().AsSpan();
+
+            bool checkNpa = int.TryParse(cleanedQuery.Slice(0, 3), out int npa);
+            bool checkNxx = int.TryParse(cleanedQuery.Slice(3, 3), out int nxx);
+            bool checkXxxx = int.TryParse(cleanedQuery.Slice(6, 4), out int xxxx);
+
+            var checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
+
+            if (checkNpa && checkNxx && checkXxxx && checkValid)
+            {
+                if (AreaCode.ValidTollfree(npa))
+                {
+                    number = new PhoneNumber
+                    {
+                        DialedNumber = cleanedQuery.ToString(),
+                        NPA = npa,
+                        NXX = nxx,
+                        XXXX = xxxx,
+                        Type = NumberType.Tollfree,
+                        DateIngested = DateTime.Now
+                    };
+                }
+                else if (AreaCode.ValidNonGeographic(npa))
+                {
+                    number = new PhoneNumber
+                    {
+                        DialedNumber = cleanedQuery.ToString(),
+                        NPA = npa,
+                        NXX = nxx,
+                        XXXX = xxxx,
+                        Type = NumberType.NonGeographic,
+                        DateIngested = DateTime.Now
+                    };
+                }
+                else
+                {
+                    number = new PhoneNumber
+                    {
+                        DialedNumber = cleanedQuery.ToString(),
                         NPA = npa,
                         NXX = nxx,
                         XXXX = xxxx,

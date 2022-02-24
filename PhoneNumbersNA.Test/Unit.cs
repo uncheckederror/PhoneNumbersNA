@@ -1,10 +1,23 @@
 using Xunit;
 using PhoneNumbersNA;
+using System.Collections.Generic;
+using Xunit.Abstractions;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.IO;
+using System.Text;
 
 namespace PhoneNumbersNA.Test
 {
     public class Unit
     {
+        ITestOutputHelper output;
+
+        public Unit(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         // https://nationalnanpa.com/contact_us/NANP_Country_Contacts.pdf
         readonly string[] NANPContacts = new string[]
         {
@@ -108,7 +121,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidNPAs()
         {
-            foreach (var npa in AreaCode.All.Span)
+            foreach (var npa in AreaCode.All)
             {
                 Assert.True(npa.ToString().IsValidNPA());
                 Assert.True(AreaCode.ValidNPA(npa));
@@ -119,7 +132,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidTollfreeNPAs()
         {
-            foreach (var npa in AreaCode.TollFree.Span)
+            foreach (var npa in AreaCode.TollFree)
             {
                 Assert.True(npa.ToString().IsValidNPA());
                 Assert.True(npa.ToString().IsTollfree());
@@ -136,7 +149,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidNonGeographicNPAs()
         {
-            foreach (var npa in AreaCode.NonGeographic.Span)
+            foreach (var npa in AreaCode.NonGeographic)
             {
                 Assert.True(npa.ToString().IsValidNPA());
                 Assert.True(npa.ToString().IsNonGeographic());
@@ -222,7 +235,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void CodesByState()
         {
-            foreach (var state in AreaCode.States.Span)
+            foreach (var state in AreaCode.States)
             {
                 if (state.AreaCodes is not null)
                 {
@@ -234,6 +247,125 @@ namespace PhoneNumbersNA.Test
                     }
                 }
             }
+        }
+
+        [Fact]
+        public async void VerifyGeographicCodesFromNANPA()
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Clear();
+            string s = null;
+            var content = await client.GetAsync("https://nationalnanpa.com/enas/geoAreaCodeNumberReport.do");
+            using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
+            {
+                s = sr.ReadToEnd();
+            }
+            var pattern = "\\d\\d\\d";
+            var rgx = new Regex(pattern);
+
+            output.WriteLine(rgx.Matches(s).Count.ToString());
+
+            foreach (Match match in rgx.Matches(s))
+            {
+                var checkParse = int.TryParse(match.ValueSpan, out int npa);
+                if (checkParse)
+                {
+                    if (npa > 200 && npa < 999)
+                    {
+                        Assert.True(AreaCode.AllFlatLookup[npa], $"NPA {npa} is {AreaCode.AllFlatLookup[npa]} in the lookup.");
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async void VerifyNonGeographicCodesFromNANPA()
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Clear();
+            string s = null;
+            var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
+            using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
+            {
+                s = sr.ReadToEnd();
+            }
+            var pattern = "\\d\\d\\d";
+            var rgx = new Regex(pattern);
+
+            output.WriteLine(rgx.Matches(s).Count.ToString());
+
+            foreach (Match match in rgx.Matches(s))
+            {
+                var checkParse = int.TryParse(match.ValueSpan, out int npa);
+                if (checkParse)
+                {
+                    if (npa > 499 && npa < 901)
+                    {
+                        Assert.True(AreaCode.NonGeographicFlatLookup[npa], $"NPA {npa} is {AreaCode.NonGeographicFlatLookup[npa]} in the lookup.");
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async void VerifyTollfreeCodesFromNANPA()
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Clear();
+            string s = null;
+            var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
+            using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
+            {
+                s = sr.ReadToEnd();
+            }
+            var pattern = "\\d\\d\\d";
+            var rgx = new Regex(pattern);
+
+            output.WriteLine(rgx.Matches(s).Count.ToString());
+
+            foreach (Match match in rgx.Matches(s))
+            {
+                var checkParse = int.TryParse(match.ValueSpan, out int npa);
+                if (checkParse)
+                {
+                    if (npa > 799 && npa < 889)
+                    {
+                        output.WriteLine(npa.ToString());
+                        Assert.True(AreaCode.TollFreeFlatLookup[npa], $"NPA {npa} is {AreaCode.TollFreeFlatLookup[npa]} not in the lookup.");
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async void VerifyAllAreaCodesFromNANPA()
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Clear();
+            string s = null;
+            var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
+            using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
+            {
+                s = sr.ReadToEnd();
+            }
+            var pattern = "\\d\\d\\d";
+            var rgx = new Regex(pattern);
+
+            output.WriteLine(rgx.Matches(s).Count.ToString());
+
+            foreach (Match match in rgx.Matches(s))
+            {
+                var checkParse = int.TryParse(match.ValueSpan, out int npa);
+                if (checkParse)
+                {
+                    if (npa > 499 && npa < 999)
+                    {
+                        output.WriteLine(npa.ToString());
+                        Assert.True(AreaCode.AllFlatLookup[npa], $"NPA {npa} is {AreaCode.AllFlatLookup[npa]} not in the lookup.");
+                    }
+                }
+            }
+
         }
     }
 }

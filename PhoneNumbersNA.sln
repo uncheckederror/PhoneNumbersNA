@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31808.319
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneNumbersNA", "PhoneNumbersNA\PhoneNumbersNA.csproj", "{A9A6A9F6-3BEB-4B6A-80C8-8ECC69152E8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneNumbersNA.Test", "PhoneNumbersNA.Test\PhoneNumbersNA.Test.csproj", "{EBE172D3-06A2-4C02-B1AE-C9FACA72A595}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoneNumbersNA.Test", "PhoneNumbersNA.Test\PhoneNumbersNA.Test.csproj", "{EBE172D3-06A2-4C02-B1AE-C9FACA72A595}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneNumbersNA.Benchmark", "PhoneNumbersNA.Benchmark\PhoneNumbersNA.Benchmark.csproj", "{4E158CAD-7F50-44DC-B4F8-808864404107}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{EBE172D3-06A2-4C02-B1AE-C9FACA72A595}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBE172D3-06A2-4C02-B1AE-C9FACA72A595}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBE172D3-06A2-4C02-B1AE-C9FACA72A595}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E158CAD-7F50-44DC-B4F8-808864404107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E158CAD-7F50-44DC-B4F8-808864404107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E158CAD-7F50-44DC-B4F8-808864404107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E158CAD-7F50-44DC-B4F8-808864404107}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
