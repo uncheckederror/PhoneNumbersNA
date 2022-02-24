@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
 
 namespace PhoneNumbersNA
 {
@@ -53,11 +52,15 @@ namespace PhoneNumbersNA
             500, 521, 522, 523, 524, 525, 526, 527, 533, 544, 566, 577, 588, 600, 622, 700, 710, 800, 833, 844, 855, 866, 877, 888, 900
         };
 
-        public static bool[] AllFlatLookup = AllFlat();
-        public static bool[] TollFreeFlatLookup = TollFreeFlat();
-        public static bool[] NonGeographicFlatLookup = NonGeographicFlat();
+        // Rather than directly looping over the area code arrays or storing them in a dictionary we can use a simple array of boolean as lookup.
+        // Where the index of the array is the area code as an int and the boolean returned discribes if its valid or not.
+        // Using the PhoneNumbersNA.Benchmark console app we verified that this flat lookup is faster than a simple loop or dictionary.
+        public static readonly bool[] AllFlatLookup = AllFlat();
+        public static readonly bool[] TollFreeFlatLookup = TollFreeFlat();
+        public static readonly bool[] NonGeographicFlatLookup = NonGeographicFlat();
 
-        public static bool[] AllFlat()
+        // Generator methods for the flat lookups.
+        private static bool[] AllFlat()
         {
             var array = new bool[999];
 
@@ -69,7 +72,7 @@ namespace PhoneNumbersNA
             return array;
         }
 
-        public static bool[] TollFreeFlat()
+        private static bool[] TollFreeFlat()
         {
             var array = new bool[999];
 
@@ -81,7 +84,7 @@ namespace PhoneNumbersNA
             return array;
         }
 
-        public static bool[] NonGeographicFlat()
+        private static bool[] NonGeographicFlat()
         {
             var array = new bool[999];
 
