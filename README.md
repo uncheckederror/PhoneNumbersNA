@@ -58,6 +58,13 @@ This library is used in production by [Accelerate Networks](https://github.com/A
 
 Update 2/22/2022: Discussion of updates and improvements version 1.0.4 in this [Twitter thread.](https://twitter.com/UncheckedError/status/1496217725559005186)
 
+### Performance 🚅 ###
+You can run the benchmarks for this library on your local machine by cloning this repo and then opening the solution file in Visual Studio 2022. Select the PhoneNumbersNA.Benchmark console app and then run it as a "Release" build. The benchmarks typically take about 4 minutes to run. Alternatively you can install the .NET SDK and use .NET CLI to build the project in release mode and run it.
+
+Here are the benchmarks for the current version of PhoneNumbersNA:
+
+![image](https://user-images.githubusercontent.com/11726956/155625946-5931aa98-b577-4bad-b5d5-0618cb9e1ac4.png)
+
 ### How to Contribute 🤝 ###
 Please start by creating a new issue with a description of the problem and a method to reproduce it.
   
