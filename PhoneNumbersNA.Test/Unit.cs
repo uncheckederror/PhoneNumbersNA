@@ -367,5 +367,65 @@ namespace PhoneNumbersNA.Test
             }
 
         }
+
+        // This doesn't work because the CNA website is written using VueJS.
+        // The NPA's aren't rendered unless the JS in the initial response is executed, which doesn't happen because this is not a browser.
+        [Fact]
+        public async void VerifyCanadianFromCNA()
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Clear();
+            string s = null;
+            var content = await client.GetAsync("https://cnac.ca/co_codes/co_code_lookup.htm");
+            using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
+            {
+                s = sr.ReadToEnd();
+            }
+            var pattern = "(?:[>])(\\d\\d\\d)(?:[<])";
+            var rgx = new Regex(pattern);
+
+            output.WriteLine(rgx.Matches(s).Count.ToString());
+
+            foreach (Match match in rgx.Matches(s))
+            {
+                var checkParse = int.TryParse(match.ValueSpan, out int npa);
+                if (checkParse)
+                {
+                    if (npa > 200 && npa < 999)
+                    {
+                        Assert.True(AreaCode.CanadianFlatLookup[npa], $"NPA {npa} is {AreaCode.CanadianFlatLookup[npa]} in the lookup.");
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async void VerifyCountryOrTerritoryFromNANPA()
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Clear();
+            string s = null;
+            var content = await client.GetAsync("https://nationalnanpa.com/area_code_maps/area_code_maps_Country_Territory.html");
+            using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
+            {
+                s = sr.ReadToEnd();
+            }
+            var pattern = "(?:[>])(\\d\\d\\d)(?:[<])";
+            var rgx = new Regex(pattern);
+
+            output.WriteLine(rgx.Matches(s).Count.ToString());
+
+            foreach (Match match in rgx.Matches(s))
+            {
+                var checkParse = int.TryParse(match.ValueSpan, out int npa);
+                if (checkParse)
+                {
+                    if (npa > 200 && npa < 999)
+                    {
+                        Assert.True(AreaCode.CountryOrTerritoryFlatLookup[npa], $"NPA {npa} is {AreaCode.CountryOrTerritoryFlatLookup[npa]} in the lookup.");
+                    }
+                }
+            }
+        }
     }
 }

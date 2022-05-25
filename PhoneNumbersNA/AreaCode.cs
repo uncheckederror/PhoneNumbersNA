@@ -24,14 +24,14 @@ namespace PhoneNumbersNA
         /// </summary>
         public static readonly int[] All = new int[]
         {
-            201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,223,224,225,226,227,228,229,231,234,235,236,239,240,242,246,248,249,250,251,252,253,254,256,260,262,263,264,267,268,269,270,272,274,276,278,279,281,283,284,289,
-            301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,323,325,326,327,330,331,332,334,336,337,339,340,341,343,345,346,347,351,352,360,361,364,365,367,368,380,381,385,386,387,
-            401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,423,424,425,428,430,431,432,434,435,437,438,440,441,442,443,445,447,448,450,456,458,463,464,468,469,470,473,474,475,478,479,480,484,
-            500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,527,528,530,531,532,533,534,535,538,539,540,541,544,548,551,559,561,562,563,564,566,567,570,571,572,573,574,575,577,578,579,580,581,582,584,585,586,587,588,
-            600,601,602,603,604,605,606,607,608,609,610,612,613,614,615,616,617,618,619,620,622,623,626,628,629,630,631,636,639,640,641,646,647,649,650,651,656,657,658,659,660,661,662,664,667,669,670,671,672,678,679,680,681,682,683,684,689,
-            700,701,702,703,704,705,706,707,708,709,710,711,712,713,714,715,716,717,718,719,720,721,724,725,726,727,730,731,732,734,737,740,742,743,747,753,754,757,758,760,762,763,765,767,769,770,771,772,773,774,775,778,779,780,781,782,784,785,786,787,
-            800,801,802,803,804,805,806,807,808,809,810,811,812,813,814,815,816,817,818,819,820,825,828,829,830,831,832,833,838,839,840,843,844,845,847,848,849,850,854,855,856,857,858,859,860,862,863,864,865,866,867,868,869,870,872,873,876,877,878,879,888,889,
-            900,901,902,903,904,905,906,907,908,909,910,912,913,914,915,916,917,918,919,920,925,927,928,929,930,931,934,935,936,937,938,939,940,941,945,947,949,951,952,954,956,959,970,971,972,973,978,979,980,984,985,986,989
+            201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 223, 224, 225, 226, 227, 228, 229, 231, 234, 235, 236, 239, 240, 242, 246, 248, 249, 250, 251, 252, 253, 254, 256, 260, 262, 263, 264, 267, 268, 269, 270, 272, 274, 276, 278, 279, 281, 283, 284, 289,
+            301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 323, 325, 326, 327, 330, 331, 332, 334, 336, 337, 339, 340, 341, 343, 345, 346, 347, 351, 352, 360, 361, 364, 365, 367, 368, 380, 381, 385, 386, 387,
+            401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 423, 424, 425, 428, 430, 431, 432, 434, 435, 437, 438, 440, 441, 442, 443, 445, 447, 448, 450, 456, 458, 463, 464, 468, 469, 470, 473, 474, 475, 478, 479, 480, 484,
+            500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 530, 531, 532, 533, 534, 535, 538, 539, 540, 541, 544, 548, 551, 559, 561, 562, 563, 564, 566, 567, 570, 571, 572, 573, 574, 575, 577, 578, 579, 580, 581, 582, 584, 585, 586, 587, 588,
+            600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 612, 613, 614, 615, 616, 617, 618, 619, 620, 622, 623, 626, 628, 629, 630, 631, 636, 639, 640, 641, 646, 647, 649, 650, 651, 656, 657, 658, 659, 660, 661, 662, 664, 667, 669, 670, 671, 672, 678, 679, 680, 681, 682, 683, 684, 689,
+            700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 724, 725, 726, 727, 730, 731, 732, 734, 737, 740, 742, 743, 747, 753, 754, 757, 758, 760, 762, 763, 765, 767, 769, 770, 771, 772, 773, 774, 775, 778, 779, 780, 781, 782, 784, 785, 786, 787,
+            800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 825, 828, 829, 830, 831, 832, 833, 838, 839, 840, 843, 844, 845, 847, 848, 849, 850, 854, 855, 856, 857, 858, 859, 860, 862, 863, 864, 865, 866, 867, 868, 869, 870, 872, 873, 876, 877, 878, 879, 888, 889,
+            900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 912, 913, 914, 915, 916, 917, 918, 919, 920, 925, 927, 928, 929, 930, 931, 934, 935, 936, 937, 938, 939, 940, 941, 943, 945, 947, 948, 949, 951, 952, 954, 956, 959, 970, 971, 972, 973, 978, 979, 980, 984, 985, 986, 989
         };
 
         /// <summary>
@@ -49,7 +49,42 @@ namespace PhoneNumbersNA
         /// </summary>
         public static readonly int[] NonGeographic = new int[]
         {
-            500, 521, 522, 523, 524, 525, 526, 527, 528, 533, 544, 566, 577, 588, 600, 622, 700, 710, 800, 833, 844, 855, 866, 877, 888, 900
+            500,  521,  522,  523,  524,  525,  526,  527,  528,  533,  544,  566,  577,  588,
+            600,  622,
+            700,  710,
+            800,  833,  844,  855,  866,  877,  888,
+            900
+        };
+
+        /// <summary>
+        /// All in service NPAs maintained by the CNA ( Canadian Numbering Administrator ).
+        /// https://cnac.ca/co_codes/co_code_lookup.htm
+        /// </summary>
+        public static readonly int[] Canadian = new int[]
+        {
+            204, 226, 236, 249, 250, 263, 289,
+            306, 343, 354, 365, 367, 368, 382,
+            403, 416, 418, 428, 431, 437, 438, 450, 468, 474,
+            506, 514, 519, 548, 579, 581, 584, 587,
+            604, 613, 639, 647, 672, 683,
+            705, 709, 742, 753, 778, 780, 782,
+            807, 819, 825, 867, 873, 879,
+            902, 905
+        };
+
+        /// <summary>
+        /// All in service NANPA Geographics NPAs (Area Codes) not directly in the United States or Canada. Includes sovereign nations and US territories.
+        /// https://nationalnanpa.com/area_code_maps/area_code_maps_Country_Territory.html
+        /// </summary>
+        public static readonly int[] CountryOrTerritory = new int[]
+        {
+            242, 246, 264, 268, 284,
+            340, 345,
+            441, 473,
+            649, 664, 670, 671, 684,
+            721, 758, 767, 784, 787,
+            809, 829, 849, 868, 869, 876,
+            939
         };
 
         // Rather than directly looping over the area code arrays or storing them in a dictionary we can use a simple array of boolean as lookup.
@@ -58,6 +93,8 @@ namespace PhoneNumbersNA
         public static readonly bool[] AllFlatLookup = AllFlat();
         public static readonly bool[] TollFreeFlatLookup = TollFreeFlat();
         public static readonly bool[] NonGeographicFlatLookup = NonGeographicFlat();
+        public static readonly bool[] CanadianFlatLookup = CanadianFlat();
+        public static readonly bool[] CountryOrTerritoryFlatLookup = CountryOrTerritoryFlat();
 
         public static Dictionary<int, int> AllDict = All.ToDictionary(x => x, y => y);
 
@@ -91,6 +128,30 @@ namespace PhoneNumbersNA
             var array = new bool[999];
 
             foreach (var code in NonGeographic)
+            {
+                array[code] = true;
+            }
+
+            return array;
+        }
+
+        private static bool[] CanadianFlat()
+        {
+            var array = new bool[999];
+
+            foreach (var code in Canadian)
+            {
+                array[code] = true;
+            }
+
+            return array;
+        }
+
+        private static bool[] CountryOrTerritoryFlat()
+        {
+            var array = new bool[999];
+
+            foreach (var code in CountryOrTerritory)
             {
                 array[code] = true;
             }
@@ -197,7 +258,7 @@ namespace PhoneNumbersNA
                 StateShort = "GA",
                 AreaCodes = new int[]
                 {
-                    229, 404, 470, 478, 678, 706, 762, 770, 912
+                    229, 404, 470, 478, 678, 706, 762, 770, 912, 943
                 }
             },
             new AreaCodesByState
@@ -561,6 +622,104 @@ namespace PhoneNumbersNA
                 }
             }
         };
+
+        /// <summary>
+        /// Check if an NPA (Area Code) is in service and in Canada.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidCanadian(int npa)
+        {
+            return CanadianFlatLookup[npa];
+        }
+
+        /// <summary>
+        /// Check if a string is an NPA (Area Code), is in service and in Canada.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidCanadian(string npa)
+        {
+            if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
+            {
+                var checkParse = int.TryParse(npa, out var canadian);
+
+                if (checkParse)
+                {
+                    return ValidCanadian(canadian);
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if an NPA or phone number is a valid Canadian number.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsCanadian(this string str)
+        {
+            if (!string.IsNullOrWhiteSpace(str))
+            {
+                return str.Length switch
+                {
+                    10 => ValidCanadian(str[..3]),
+                    _ => ValidCanadian(str),
+                };
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if an NPA (Area Code) is in service and in not in the US or Canada.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidCountryOrTerritory(int npa)
+        {
+            return CountryOrTerritoryFlatLookup[npa];
+        }
+
+        /// <summary>
+        /// Check if a string is an NPA (Area Code), is in service and in not in the US or Canada.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidCountryOrTerritory(string npa)
+        {
+            if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
+            {
+                var checkParse = int.TryParse(npa, out var country);
+
+                if (checkParse)
+                {
+                    return ValidCountryOrTerritory(country);
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if an NPA or phone number is a valid non-US or Canadian number.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsCountryOrTerritory(this string str)
+        {
+            if (!string.IsNullOrWhiteSpace(str))
+            {
+                return str.Length switch
+                {
+                    10 => ValidCountryOrTerritory(str[..3]),
+                    _ => ValidCountryOrTerritory(str),
+                };
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Check if an NPA (Area Code) is in service and Non-geographic.
@@ -975,7 +1134,9 @@ namespace PhoneNumbersNA
     {
         Local,
         Tollfree,
-        NonGeographic
+        NonGeographic,
+        CountryOrTerritory,
+        Canada
     }
 
     public class PhoneNumber
@@ -991,14 +1152,14 @@ namespace PhoneNumbersNA
         public static bool TryParse(string input, out PhoneNumber? number)
         {
             // Fail fast
-            if (input.Length < 10)
+            if (input is null || input?.Length < 10)
             {
                 number = null;
                 return false;
             }
 
             // Clean up the query.
-            input = input.Trim().ToLowerInvariant();
+            input = input!.Trim().ToLowerInvariant();
 
             var converted = new List<char>();
             foreach (var letter in input)
@@ -1063,6 +1224,30 @@ namespace PhoneNumbersNA
                         DateIngested = DateTime.Now
                     };
                 }
+                else if (AreaCode.ValidCanadian(npa))
+                {
+                    number = new PhoneNumber
+                    {
+                        DialedNumber = cleanedQuery.ToString(),
+                        NPA = npa,
+                        NXX = nxx,
+                        XXXX = xxxx,
+                        Type = NumberType.Canada,
+                        DateIngested = DateTime.Now
+                    };
+                }
+                else if (AreaCode.ValidCountryOrTerritory(npa))
+                {
+                    number = new PhoneNumber
+                    {
+                        DialedNumber = cleanedQuery.ToString(),
+                        NPA = npa,
+                        NXX = nxx,
+                        XXXX = xxxx,
+                        Type = NumberType.CountryOrTerritory,
+                        DateIngested = DateTime.Now
+                    };
+                }
                 else
                 {
                     number = new PhoneNumber
@@ -1118,6 +1303,30 @@ namespace PhoneNumbersNA
                         NXX = nxx,
                         XXXX = xxxx,
                         Type = NumberType.NonGeographic,
+                        DateIngested = DateTime.Now
+                    };
+                }
+                else if (AreaCode.ValidCanadian(npa))
+                {
+                    number = new PhoneNumber
+                    {
+                        DialedNumber = cleanedQuery.ToString(),
+                        NPA = npa,
+                        NXX = nxx,
+                        XXXX = xxxx,
+                        Type = NumberType.Canada,
+                        DateIngested = DateTime.Now
+                    };
+                }
+                else if (AreaCode.ValidCountryOrTerritory(npa))
+                {
+                    number = new PhoneNumber
+                    {
+                        DialedNumber = cleanedQuery.ToString(),
+                        NPA = npa,
+                        NXX = nxx,
+                        XXXX = xxxx,
+                        Type = NumberType.CountryOrTerritory,
                         DateIngested = DateTime.Now
                     };
                 }
