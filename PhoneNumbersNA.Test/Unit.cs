@@ -1,11 +1,10 @@
-using Xunit;
-using PhoneNumbersNA;
-using System.Collections.Generic;
-using Xunit.Abstractions;
-using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.IO;
+using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
+
+using Xunit;
+using Xunit.Abstractions;
 
 namespace PhoneNumbersNA.Test
 {
@@ -36,7 +35,7 @@ namespace PhoneNumbersNA.Test
                 "202-418-1525","202-418-1413","925-420-0340","571-363-3838",
         };
 
-        readonly string manyNumbers = "+1 206-858-9310\r\n2024561414\r\n(206)858-8757\r\nRandom Jibberish that should be stripped";
+        readonly string manyNumbers = "+1 206-858-9310\r\n2024561414\r\n(206)858-8757\r\nRandom Gibberish that should be stripped";
 
         readonly string[] badNumbers = new string[]
         {
