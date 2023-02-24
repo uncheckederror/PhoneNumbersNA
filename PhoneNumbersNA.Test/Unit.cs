@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -94,7 +95,8 @@ namespace PhoneNumbersNA.Test
                 var checkParse = PhoneNumber.TryParse(number, out var phoneNumber);
 
                 Assert.False(checkParse);
-                Assert.True(phoneNumber is null);
+                Assert.True(phoneNumber is not null);
+                Assert.True(phoneNumber.DialedNumber == string.Empty);
             }
         }
 
@@ -253,7 +255,7 @@ namespace PhoneNumbersNA.Test
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
-            string s = null;
+            string? s = null;
             var content = await client.GetAsync("https://nationalnanpa.com/enas/geoAreaCodeNumberReport.do");
             using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
             {
@@ -264,7 +266,7 @@ namespace PhoneNumbersNA.Test
 
             output.WriteLine(rgx.Matches(s).Count.ToString());
 
-            foreach (Match match in rgx.Matches(s))
+            foreach (Match match in rgx.Matches(s).Cast<Match>())
             {
                 var checkParse = int.TryParse(match.ValueSpan, out int npa);
                 if (checkParse)
@@ -282,7 +284,7 @@ namespace PhoneNumbersNA.Test
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
-            string s = null;
+            string? s = null;
             var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
             using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
             {
@@ -293,7 +295,7 @@ namespace PhoneNumbersNA.Test
 
             output.WriteLine(rgx.Matches(s).Count.ToString());
 
-            foreach (Match match in rgx.Matches(s))
+            foreach (Match match in rgx.Matches(s).Cast<Match>())
             {
                 var checkParse = int.TryParse(match.ValueSpan, out int npa);
                 if (checkParse)
@@ -311,7 +313,7 @@ namespace PhoneNumbersNA.Test
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
-            string s = null;
+            string? s = null;
             var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
             using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
             {
@@ -322,7 +324,7 @@ namespace PhoneNumbersNA.Test
 
             output.WriteLine(rgx.Matches(s).Count.ToString());
 
-            foreach (Match match in rgx.Matches(s))
+            foreach (Match match in rgx.Matches(s).Cast<Match>())
             {
                 var checkParse = int.TryParse(match.ValueSpan, out int npa);
                 if (checkParse)
@@ -341,7 +343,7 @@ namespace PhoneNumbersNA.Test
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
-            string s = null;
+            string? s = null;
             var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
             using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
             {
@@ -352,7 +354,7 @@ namespace PhoneNumbersNA.Test
 
             output.WriteLine(rgx.Matches(s).Count.ToString());
 
-            foreach (Match match in rgx.Matches(s))
+            foreach (Match match in rgx.Matches(s).Cast<Match>())
             {
                 var checkParse = int.TryParse(match.ValueSpan, out int npa);
                 if (checkParse)
@@ -374,7 +376,7 @@ namespace PhoneNumbersNA.Test
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
-            string s = null;
+            string? s = null;
             var content = await client.GetAsync("https://cnac.ca/co_codes/co_code_lookup.htm");
             using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
             {
@@ -385,7 +387,7 @@ namespace PhoneNumbersNA.Test
 
             output.WriteLine(rgx.Matches(s).Count.ToString());
 
-            foreach (Match match in rgx.Matches(s))
+            foreach (Match match in rgx.Matches(s).Cast<Match>())
             {
                 var checkParse = int.TryParse(match.ValueSpan, out int npa);
                 if (checkParse)
@@ -403,7 +405,7 @@ namespace PhoneNumbersNA.Test
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
-            string s = null;
+            string? s = null;
             var content = await client.GetAsync("https://nationalnanpa.com/area_code_maps/area_code_maps_Country_Territory.html");
             using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
             {
@@ -414,7 +416,7 @@ namespace PhoneNumbersNA.Test
 
             output.WriteLine(rgx.Matches(s).Count.ToString());
 
-            foreach (Match match in rgx.Matches(s))
+            foreach (Match match in rgx.Matches(s).Cast<Match>())
             {
                 var checkParse = int.TryParse(match.ValueSpan, out int npa);
                 if (checkParse)

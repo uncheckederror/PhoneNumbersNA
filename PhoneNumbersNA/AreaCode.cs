@@ -16,6 +16,7 @@ namespace PhoneNumbersNA
             return AreaCode.ExtractDialedNumbers(str);
         }
     }
+
     public static class AreaCode
     {
         /// <summary>
@@ -30,7 +31,7 @@ namespace PhoneNumbersNA
             500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 538, 539, 540, 541, 544, 548, 551, 557, 559, 561, 562, 563, 564, 566, 567, 570, 571, 572, 573, 574, 575, 577, 578, 579, 580, 581, 582, 584, 585, 586, 587, 588,
             600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 612, 613, 614, 615, 616, 617, 618, 619, 620, 622, 623, 626, 628, 629, 630, 631, 636, 639, 640, 641, 646, 647, 649, 650, 651, 656, 657, 658, 659, 660, 661, 662, 664, 667, 669, 670, 671, 672, 678, 679, 680, 681, 682, 683, 684, 689,
             700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 724, 725, 726, 727, 730, 731, 732, 734, 737, 740, 742, 743, 747, 753, 754, 757, 758, 760, 762, 763, 765, 767, 769, 770, 771, 772, 773, 774, 775, 778, 779, 780, 781, 782, 784, 785, 786, 787,
-            800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 825, 826, 828, 829, 830, 831, 832, 833, 835, 838, 839, 840, 843, 844, 845, 847, 848, 849, 850, 854, 855, 856, 857, 858, 859, 860, 862, 863, 864, 865, 866, 867, 868, 869, 870, 872, 873, 876, 877, 878, 879, 888, 889,
+            800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 825, 826, 828, 829, 830, 831, 832, 833, 835, 838, 839, 840, 843, 844, 845, 847, 848, 849, 850, 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 872, 873, 876, 877, 878, 879, 888, 889,
             900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 912, 913, 914, 915, 916, 917, 918, 919, 920, 925, 927, 928, 929, 930, 931, 934, 935, 936, 937, 938, 939, 940, 941, 943, 945, 947, 948, 949, 951, 952, 954, 956, 959, 970, 971, 972, 973, 978, 979, 980, 983, 984, 985, 986, 989
         };
 
@@ -101,69 +102,64 @@ namespace PhoneNumbersNA
         // Generator methods for the flat lookups.
         private static bool[] AllFlat()
         {
-            var array = new bool[999];
+            bool[] array = new bool[999];
 
-            foreach (var code in All)
+            foreach (int code in All)
             {
                 array[code] = true;
             }
-
             return array;
         }
 
         private static bool[] TollFreeFlat()
         {
-            var array = new bool[999];
+            bool[] array = new bool[999];
 
-            foreach (var code in TollFree)
+            foreach (int code in TollFree)
             {
                 array[code] = true;
             }
-
             return array;
         }
 
         private static bool[] NonGeographicFlat()
         {
-            var array = new bool[999];
+            bool[] array = new bool[999];
 
-            foreach (var code in NonGeographic)
+            foreach (int code in NonGeographic)
             {
                 array[code] = true;
             }
-
             return array;
         }
 
         private static bool[] CanadianFlat()
         {
-            var array = new bool[999];
+            bool[] array = new bool[999];
 
-            foreach (var code in Canadian)
+            foreach (int code in Canadian)
             {
                 array[code] = true;
             }
-
             return array;
         }
 
         private static bool[] CountryOrTerritoryFlat()
         {
-            var array = new bool[999];
+            bool[] array = new bool[999];
 
-            foreach (var code in CountryOrTerritory)
+            foreach (int code in CountryOrTerritory)
             {
                 array[code] = true;
             }
-
             return array;
         }
 
         public class AreaCodesByState
         {
-            public string? State { get; set; }
-            public string? StateShort { get; set; }
-            public int[]? AreaCodes { get; set; }
+            public string State { get; set; } = string.Empty;
+            public string StateShort { get; set; } = string.Empty;
+            public int[] AreaCodes { get; set; } = Array.Empty<int>();
         }
 
         /// <summary>
@@ -640,16 +636,15 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidCanadian(string npa)
         {
-            if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
+            if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
-                var checkParse = int.TryParse(npa, out var canadian);
+                bool checkParse = int.TryParse(npa, out int canadian);
 
                 if (checkParse)
                 {
                     return ValidCanadian(canadian);
                 }
             }
-
             return false;
         }
 
@@ -668,7 +663,6 @@ namespace PhoneNumbersNA
                     _ => ValidCanadian(str),
                 };
             }
-
             return false;
         }
 
@@ -689,16 +683,15 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidCountryOrTerritory(string npa)
         {
-            if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
+            if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
-                var checkParse = int.TryParse(npa, out var country);
+                bool checkParse = int.TryParse(npa, out int country);
 
                 if (checkParse)
                 {
                     return ValidCountryOrTerritory(country);
                 }
             }
-
             return false;
         }
 
@@ -717,7 +710,6 @@ namespace PhoneNumbersNA
                     _ => ValidCountryOrTerritory(str),
                 };
             }
-
             return false;
         }
 
@@ -738,16 +730,15 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidNonGeographic(string npa)
         {
-            if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
+            if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
-                var checkParse = int.TryParse(npa, out var nongeo);
+                bool checkParse = int.TryParse(npa, out int nongeo);
 
                 if (checkParse)
                 {
                     return ValidNonGeographic(nongeo);
                 }
             }
-
             return false;
         }
 
@@ -766,7 +757,6 @@ namespace PhoneNumbersNA
                     _ => ValidNonGeographic(str),
                 };
             }
-
             return false;
         }
 
@@ -787,16 +777,15 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidTollfree(string npa)
         {
-            if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
+            if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
-                var checkParse = int.TryParse(npa, out var toll);
+                bool checkParse = int.TryParse(npa, out int toll);
 
                 if (checkParse)
                 {
                     return ValidTollfree(toll);
                 }
             }
-
             return false;
         }
 
@@ -815,7 +804,6 @@ namespace PhoneNumbersNA
                     _ => ValidTollfree(str),
                 };
             }
-
             return false;
         }
 
@@ -827,8 +815,7 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidNPA(int npa)
         {
-            var checkGet = AllDict.TryGetValue(npa, out int value);
-
+            bool checkGet = AllDict.TryGetValue(npa, out int value);
             return checkGet && value == npa;
 
         }
@@ -840,16 +827,14 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidNPA(string npa)
         {
-            if (!string.IsNullOrWhiteSpace(npa) && npa.Length == 3)
+            if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
-                var checkParse = int.TryParse(npa, out var code);
-
+                bool checkParse = int.TryParse(npa, out int code);
                 if (checkParse)
                 {
                     return ValidNPA(code);
                 }
             }
-
             return false;
         }
 
@@ -875,7 +860,6 @@ namespace PhoneNumbersNA
             {
                 return true;
             }
-
             return false;
         }
 
@@ -886,15 +870,14 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidNXX(string nxx)
         {
-            if (!string.IsNullOrWhiteSpace(nxx) && nxx.Length == 3)
+            if (!string.IsNullOrWhiteSpace(nxx) && nxx.Length is 3)
             {
-                var checkParse = int.TryParse(nxx, out var office);
+                bool checkParse = int.TryParse(nxx, out int office);
                 if (checkParse)
                 {
                     return ValidNXX(office);
                 }
             }
-
             return false;
         }
 
@@ -919,7 +902,6 @@ namespace PhoneNumbersNA
             {
                 return true;
             }
-
             return false;
         }
 
@@ -930,16 +912,14 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidXXXX(string xxxx)
         {
-            if (!string.IsNullOrWhiteSpace(xxxx) && xxxx.Length == 4)
+            if (!string.IsNullOrWhiteSpace(xxxx) && xxxx.Length is 4)
             {
-                var checkParse = int.TryParse(xxxx, out var vanity);
-
+                bool checkParse = int.TryParse(xxxx, out int vanity);
                 if (checkParse)
                 {
                     return ValidXXXX(vanity);
                 }
             }
-
             return false;
         }
 
@@ -972,7 +952,7 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidPhoneNumber(string dialedNumber)
         {
-            if (!string.IsNullOrWhiteSpace(dialedNumber) && dialedNumber.Length == 10)
+            if (!string.IsNullOrWhiteSpace(dialedNumber) && dialedNumber.Length is 10)
             {
                 bool checkNpa = int.TryParse(dialedNumber.AsSpan(0, 3), out int npa);
                 bool checkNxx = int.TryParse(dialedNumber.AsSpan(3, 3), out int nxx);
@@ -983,7 +963,6 @@ namespace PhoneNumbersNA
                     return ValidPhoneNumber(npa, nxx, xxxx);
                 }
             }
-
             return false;
         }
 
@@ -994,12 +973,19 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool IsValidPhoneNumber(this string input)
         {
-            // Clean up the query.
-            input = input.Trim().ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(input) || input.Length < 10)
+            {
+                return false;
+            }
+            else
+            {
+                // Clean up the query.
+                input = input.Trim().ToLowerInvariant();
+            }
 
             // Parse the query.
-            var converted = new List<char>();
-            foreach (var letter in input)
+            List<char> converted = new();
+            foreach (char letter in input)
             {
                 // Allow digits.
                 if (char.IsDigit(letter))
@@ -1015,7 +1001,7 @@ namespace PhoneNumbersNA
             }
 
             // Drop leading 1's to improve the copy/paste experiance.
-            if (converted.Count > 0 && converted[0] == '1' && converted.Count > 10)
+            if (converted.Count > 0 && converted[0] is '1' && converted.Count > 10)
             {
                 converted.Remove('1');
             }
@@ -1030,11 +1016,11 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static IEnumerable<string> ExtractDialedNumbers(this string str)
         {
-            var parsedNumbers = new List<string>();
+            List<string> parsedNumbers = new();
 
             if (!string.IsNullOrWhiteSpace(str))
             {
-                var numberCanidates = str.Trim()
+                string[] numberCanidates = str.Trim()
                     .Replace(") ", "")
                     .Replace("(", "")
                     .Replace(" ", "")
@@ -1042,11 +1028,11 @@ namespace PhoneNumbersNA
                     .Replace("\r\n", " ")
                     .Split();
 
-                foreach (var query in numberCanidates)
+                foreach (string query in numberCanidates)
                 {
                     // Parse the query.
-                    var converted = new List<char>();
-                    foreach (var letter in query)
+                    List<char> converted = new();
+                    foreach (char letter in query)
                     {
                         // Allow digits.
                         if (char.IsDigit(letter))
@@ -1057,13 +1043,13 @@ namespace PhoneNumbersNA
                     }
 
                     // Drop leading 1's to improve the copy/paste experiance.
-                    if (converted.Count > 0 && converted.Count > 10 && converted[0] == '1')
+                    if (converted.Count > 0 && converted.Count > 10 && converted[0] is '1')
                     {
                         converted.Remove('1');
                     }
 
                     // Only if its a perfect number do we want to return it.
-                    if (converted.Count == 10)
+                    if (converted.Count is 10)
                     {
                         parsedNumbers.Add(converted.ToArray().AsSpan().ToString());
                     }
@@ -1074,11 +1060,11 @@ namespace PhoneNumbersNA
 
         public static IEnumerable<PhoneNumber> ExtractPhoneNumbers(this string str)
         {
-            var parsedNumbers = new List<PhoneNumber>();
+            List<PhoneNumber> parsedNumbers = new();
 
             if (!string.IsNullOrWhiteSpace(str))
             {
-                var cleanedInput = str.Trim()
+                ReadOnlySpan<char> cleanedInput = str.Trim()
                     .Replace(") ", "")
                     .Replace("(", "")
                     .Replace(" ", "")
@@ -1086,8 +1072,8 @@ namespace PhoneNumbersNA
                     .Replace("\r\n", " ")
                     .AsSpan();
 
-                var sliceIndex = 0;
-                var query = new ReadOnlySpan<char>();
+                int sliceIndex = 0;
+                ReadOnlySpan<char> query = new();
                 while (sliceIndex > -1)
                 {
                     sliceIndex = cleanedInput.IndexOf(' ');
@@ -1098,8 +1084,8 @@ namespace PhoneNumbersNA
                     }
 
                     // Parse the query.
-                    var converted = new List<char>();
-                    foreach (var letter in query)
+                    List<char> converted = new();
+                    foreach (char letter in query)
                     {
                         // Allow digits.
                         if (char.IsDigit(letter))
@@ -1110,16 +1096,16 @@ namespace PhoneNumbersNA
                     }
 
                     // Drop leading 1's to improve the copy/paste experiance.
-                    if (converted.Count > 0 && converted.Count > 10 && converted[0] == '1')
+                    if (converted.Count > 0 && converted.Count > 10 && converted[0] is '1')
                     {
                         converted.Remove('1');
                     }
 
                     // Only if its a perfect number do we want to query for it.
-                    if (converted.Count == 10)
+                    if (converted.Count is 10)
                     {
-                        var checkParse = PhoneNumber.TryParseExact(converted, out var phoneNumber);
-                        if (checkParse && phoneNumber is not null)
+                        bool checkParse = PhoneNumber.TryParseExact(converted, out PhoneNumber phoneNumber);
+                        if (checkParse)
                         {
                             parsedNumbers.Add(phoneNumber);
                         }
@@ -1141,28 +1127,30 @@ namespace PhoneNumbersNA
 
     public class PhoneNumber
     {
-        public string? DialedNumber { get; set; }
+        public string DialedNumber { get; set; } = string.Empty;
         public int NPA { get; set; }
         public int NXX { get; set; }
         public int XXXX { get; set; }
         public NumberType Type { get; set; }
         public DateTime DateIngested { get; set; }
-        public string? IngestedFrom { get; set; }
+        public string IngestedFrom { get; set; } = string.Empty;
 
-        public static bool TryParse(string input, out PhoneNumber? number)
+        public static bool TryParse(string input, out PhoneNumber number)
         {
             // Fail fast
             if (input is null || input?.Length < 10)
             {
-                number = null;
+                number = new();
                 return false;
             }
+            else
+            {
+                // Clean up the query.
+                input = input?.Trim().ToLowerInvariant() ?? string.Empty;
+            }
 
-            // Clean up the query.
-            input = input!.Trim().ToLowerInvariant();
-
-            var converted = new List<char>();
-            foreach (var letter in input)
+            List<char> converted = new();
+            foreach (char letter in input)
             {
                 // Allow digits.
                 if (char.IsDigit(letter))
@@ -1184,15 +1172,15 @@ namespace PhoneNumbersNA
             }
 
             // This input can't be parsed, so bail out.
-            if (converted.Count != 10)
+            if (converted.Count is not 10)
             {
-                number = null;
+                number = new();
                 return false;
             }
 
             var cleanedQuery = converted.ToArray().AsSpan();
 
-            bool checkNpa = int.TryParse(cleanedQuery.Slice(0, 3), out int npa);
+            bool checkNpa = int.TryParse(cleanedQuery[..3], out int npa);
             bool checkNxx = int.TryParse(cleanedQuery.Slice(3, 3), out int nxx);
             bool checkXxxx = int.TryParse(cleanedQuery.Slice(6, 4), out int xxxx);
 
@@ -1265,16 +1253,16 @@ namespace PhoneNumbersNA
             }
             else
             {
-                number = null;
+                number = new();
                 return false;
             }
         }
 
-        public static bool TryParseExact(IEnumerable<char> input, out PhoneNumber? number)
+        public static bool TryParseExact(IEnumerable<char> input, out PhoneNumber number)
         {
             var cleanedQuery = input.ToArray().AsSpan();
 
-            bool checkNpa = int.TryParse(cleanedQuery.Slice(0, 3), out int npa);
+            bool checkNpa = int.TryParse(cleanedQuery[..3], out int npa);
             bool checkNxx = int.TryParse(cleanedQuery.Slice(3, 3), out int nxx);
             bool checkXxxx = int.TryParse(cleanedQuery.Slice(6, 4), out int xxxx);
 
@@ -1347,7 +1335,7 @@ namespace PhoneNumbersNA
             }
             else
             {
-                number = null;
+                number = new();
                 return false;
             }
         }
