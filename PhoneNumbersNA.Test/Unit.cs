@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -11,7 +12,7 @@ namespace PhoneNumbersNA.Test
 {
     public class Unit
     {
-        ITestOutputHelper output;
+        readonly ITestOutputHelper output;
 
         public Unit(ITestOutputHelper output)
         {
@@ -47,44 +48,43 @@ namespace PhoneNumbersNA.Test
         public void ExtractNumbers()
         {
             var numbers = manyNumbers.ExtractDialedNumbers();
+            Assert.True(numbers.Any());
+            Assert.True(numbers.Count() is 3);
             foreach (var number in numbers)
             {
                 var checkParse = PhoneNumber.TryParse(number, out var phoneNumber);
-
-                if (checkParse && phoneNumber is not null)
-                {
-                    Assert.True(phoneNumber.DialedNumber?.IsValidPhoneNumber() ?? false);
-                    Assert.True(phoneNumber.IsValid());
-                }
+                Assert.True(checkParse);
+                Assert.True(phoneNumber.DialedNumber.IsValidPhoneNumber());
+                Assert.True(phoneNumber.IsValid());
             }
 
-            // Alternative alias
-            numbers = Parse.AsDialedNumbers(manyNumbers);
+            numbers = string.Join(", ", badNumbers).ExtractDialedNumbers();
+            Assert.False(numbers.Any());
+
+            numbers = AreaCode.ExtractDialedNumbers(manyNumbers.AsSpan());
+            Assert.True(numbers.Any());
+            Assert.True(numbers.Count() is 3);
             foreach (var number in numbers)
             {
                 var checkParse = PhoneNumber.TryParse(number, out var phoneNumber);
-
-                if (checkParse && phoneNumber is not null)
-                {
-                    Assert.True(phoneNumber.DialedNumber?.IsValidPhoneNumber() ?? false);
-                    Assert.True(phoneNumber.IsValid());
-                }
+                Assert.True(checkParse);
+                Assert.True(phoneNumber.DialedNumber.IsValidPhoneNumber());
+                Assert.True(phoneNumber.IsValid());
             }
+
+            numbers = AreaCode.ExtractDialedNumbers(string.Join(", ", badNumbers).AsSpan());
+            Assert.False(numbers.Any());
 
             var phoneNumbers = manyNumbers.ExtractPhoneNumbers();
-
+            Assert.True(phoneNumbers.Any());
+            Assert.True(phoneNumbers.Count() is 3);
             foreach (var number in phoneNumbers)
             {
                 Assert.True(number.IsValid());
             }
 
-            // Alternative alias
-            phoneNumbers = Parse.AsPhoneNumbers(manyNumbers);
-
-            foreach (var number in phoneNumbers)
-            {
-                Assert.True(number.IsValid());
-            }
+            phoneNumbers = string.Join(", ", badNumbers).ExtractPhoneNumbers();
+            Assert.False(phoneNumbers.Any());
         }
 
         [Fact]
@@ -97,6 +97,34 @@ namespace PhoneNumbersNA.Test
                 Assert.False(checkParse);
                 Assert.True(phoneNumber is not null);
                 Assert.True(phoneNumber.DialedNumber == string.Empty);
+            }
+        }
+
+        [Fact]
+        public void TryParseBenchmark()
+        {
+            var checkParse = PhoneNumber.TryParse("ppboi", out var phoneNumber);
+
+            Assert.False(checkParse);
+            Assert.True(phoneNumber is not null);
+            Assert.True(phoneNumber.DialedNumber == string.Empty);
+
+            checkParse = PhoneNumber.TryParse("1 (111) 111-1111", out phoneNumber);
+
+            Assert.False(checkParse);
+            Assert.True(phoneNumber is not null);
+            Assert.True(phoneNumber.DialedNumber == string.Empty);
+        }
+
+        [Fact]
+        public void TryParseNANPAContactNumbers()
+        {
+            foreach (var number in NANPContacts)
+            {
+                var checkParse = PhoneNumber.TryParse(number, out PhoneNumber phoneNumber);
+                Assert.True(checkParse);
+                Assert.True(phoneNumber is not null);
+                Assert.False(string.IsNullOrWhiteSpace(phoneNumber?.DialedNumber));
             }
         }
 
@@ -122,6 +150,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidNPAs()
         {
+            Assert.True(AreaCode.All.Any());
             foreach (var npa in AreaCode.All)
             {
                 Assert.True(npa.ToString().IsValidNPA());
@@ -133,6 +162,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidTollfreeNPAs()
         {
+            Assert.True(AreaCode.TollFree.Any());
             foreach (var npa in AreaCode.TollFree)
             {
                 Assert.True(npa.ToString().IsValidNPA());
@@ -150,6 +180,7 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void ValidNonGeographicNPAs()
         {
+            Assert.True(AreaCode.NonGeographic.Any());
             foreach (var npa in AreaCode.NonGeographic)
             {
                 Assert.True(npa.ToString().IsValidNPA());
@@ -220,7 +251,7 @@ namespace PhoneNumbersNA.Test
             var input = "1800KROGERS";
             var checkValidNumber = input.IsValidPhoneNumber();
             Assert.True(checkValidNumber);
-            var checkParse = PhoneNumber.TryParse(input, out var phoneNumber);
+            var checkParse = PhoneNumber.TryParse(input, out PhoneNumber phoneNumber);
             Assert.True(checkParse);
             Assert.True(phoneNumber is not null);
             if (phoneNumber is not null)
@@ -236,9 +267,10 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void CodesByState()
         {
+            Assert.True(AreaCode.States.Any());
             foreach (var state in AreaCode.States)
             {
-                if (state.AreaCodes is not null)
+                if (state.AreaCodes is not null && state.AreaCodes.Any())
                 {
                     foreach (var code in state.AreaCodes)
                     {

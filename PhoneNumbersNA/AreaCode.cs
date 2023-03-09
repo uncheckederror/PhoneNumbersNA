@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 
 namespace PhoneNumbersNA
@@ -9,9 +10,17 @@ namespace PhoneNumbersNA
     {
         public static IEnumerable<PhoneNumber> AsPhoneNumbers(string str)
         {
+            return AreaCode.ExtractPhoneNumbers(str.AsSpan());
+        }
+        public static IEnumerable<PhoneNumber> AsPhoneNumbers(ReadOnlySpan<char> str)
+        {
             return AreaCode.ExtractPhoneNumbers(str);
         }
         public static IEnumerable<string> AsDialedNumbers(string str)
+        {
+            return AreaCode.ExtractDialedNumbers(str.AsSpan());
+        }
+        public static IEnumerable<string> AsDialedNumbers(ReadOnlySpan<char> str)
         {
             return AreaCode.ExtractDialedNumbers(str);
         }
@@ -97,7 +106,7 @@ namespace PhoneNumbersNA
         public static readonly bool[] CanadianFlatLookup = CanadianFlat();
         public static readonly bool[] CountryOrTerritoryFlatLookup = CountryOrTerritoryFlat();
 
-        public static Dictionary<int, int> AllDict = All.ToDictionary(x => x, y => y);
+        public static Dictionary<int, int> GetAsDictionary() => All.ToDictionary(x => x, y => y);
 
         // Generator methods for the flat lookups.
         private static bool[] AllFlat()
@@ -649,18 +658,39 @@ namespace PhoneNumbersNA
         }
 
         /// <summary>
+        /// Check if a string is an NPA (Area Code), is in service and in Canada.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidCanadian(ReadOnlySpan<char> npa)
+        {
+            if (npa.Length is 3)
+            {
+                bool checkParse = int.TryParse(npa, out int canadian);
+
+                if (checkParse)
+                {
+                    return ValidCanadian(canadian);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Check if an NPA or phone number is a valid Canadian number.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
         public static bool IsCanadian(this string str)
         {
+            ReadOnlySpan<char> number = str.AsSpan();
+
             if (!string.IsNullOrWhiteSpace(str))
             {
                 return str.Length switch
                 {
-                    10 => ValidCanadian(str[..3]),
-                    _ => ValidCanadian(str),
+                    10 => ValidCanadian(number[..3]),
+                    _ => ValidCanadian(number),
                 };
             }
             return false;
@@ -685,6 +715,25 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
+                bool checkParse = int.TryParse(npa.AsSpan(), out int country);
+
+                if (checkParse)
+                {
+                    return ValidCountryOrTerritory(country);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Check if a string is an NPA (Area Code), is in service and in not in the US or Canada.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidCountryOrTerritory(ReadOnlySpan<char> npa)
+        {
+            if (npa.Length is 3)
+            {
                 bool checkParse = int.TryParse(npa, out int country);
 
                 if (checkParse)
@@ -702,12 +751,14 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool IsCountryOrTerritory(this string str)
         {
+            ReadOnlySpan<char> number = str.AsSpan();
+
             if (!string.IsNullOrWhiteSpace(str))
             {
                 return str.Length switch
                 {
-                    10 => ValidCountryOrTerritory(str[..3]),
-                    _ => ValidCountryOrTerritory(str),
+                    10 => ValidCountryOrTerritory(number[..3]),
+                    _ => ValidCountryOrTerritory(number),
                 };
             }
             return false;
@@ -732,6 +783,25 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
+                bool checkParse = int.TryParse(npa.AsSpan(), out int nongeo);
+
+                if (checkParse)
+                {
+                    return ValidNonGeographic(nongeo);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Check if a string is an NPA (Area Code), is in service, and non geographic.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidNonGeographic(ReadOnlySpan<char> npa)
+        {
+            if (npa.Length is 3)
+            {
                 bool checkParse = int.TryParse(npa, out int nongeo);
 
                 if (checkParse)
@@ -749,12 +819,14 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool IsNonGeographic(this string str)
         {
+            ReadOnlySpan<char> number = str.AsSpan();
+
             if (!string.IsNullOrWhiteSpace(str))
             {
                 return str.Length switch
                 {
-                    10 => ValidNonGeographic(str[..3]),
-                    _ => ValidNonGeographic(str),
+                    10 => ValidNonGeographic(number[..3]),
+                    _ => ValidNonGeographic(number),
                 };
             }
             return false;
@@ -779,6 +851,20 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
+                return ValidTollfree(npa.AsSpan());
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Check if a string is an NPA (Area Code), is in service, and Tollfree.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidTollfree(ReadOnlySpan<char> npa)
+        {
+            if (npa.Length is 3)
+            {
                 bool checkParse = int.TryParse(npa, out int toll);
 
                 if (checkParse)
@@ -796,12 +882,14 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool IsTollfree(this string str)
         {
+            ReadOnlySpan<char> number = str.AsSpan();
+
             if (!string.IsNullOrWhiteSpace(str))
             {
                 return str.Length switch
                 {
-                    10 => ValidTollfree(str[..3]),
-                    _ => ValidTollfree(str),
+                    10 => ValidTollfree(number[..3]),
+                    _ => ValidTollfree(number),
                 };
             }
             return false;
@@ -815,9 +903,7 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool ValidNPA(int npa)
         {
-            bool checkGet = AllDict.TryGetValue(npa, out int value);
-            return checkGet && value == npa;
-
+            return AllFlatLookup[npa];
         }
 
         /// <summary>
@@ -829,7 +915,7 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
-                bool checkParse = int.TryParse(npa, out int code);
+                bool checkParse = int.TryParse(npa.AsSpan(), out int code);
                 if (checkParse)
                 {
                     return ValidNPA(code);
@@ -872,7 +958,7 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(nxx) && nxx.Length is 3)
             {
-                bool checkParse = int.TryParse(nxx, out int office);
+                bool checkParse = int.TryParse(nxx.AsSpan(), out int office);
                 if (checkParse)
                 {
                     return ValidNXX(office);
@@ -914,7 +1000,7 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(xxxx) && xxxx.Length is 4)
             {
-                bool checkParse = int.TryParse(xxxx, out int vanity);
+                bool checkParse = int.TryParse(xxxx.AsSpan(), out int vanity);
                 if (checkParse)
                 {
                     return ValidXXXX(vanity);
@@ -954,9 +1040,23 @@ namespace PhoneNumbersNA
         {
             if (!string.IsNullOrWhiteSpace(dialedNumber) && dialedNumber.Length is 10)
             {
-                bool checkNpa = int.TryParse(dialedNumber.AsSpan(0, 3), out int npa);
-                bool checkNxx = int.TryParse(dialedNumber.AsSpan(3, 3), out int nxx);
-                bool checkXxxx = int.TryParse(dialedNumber.AsSpan(6, 4), out int xxxx);
+                return ValidPhoneNumber(dialedNumber.AsSpan());
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Validate a string-ly typed 10 digit phone number.
+        /// </summary>
+        /// <param name="dialedNumber"></param>
+        /// <returns></returns>
+        public static bool ValidPhoneNumber(ReadOnlySpan<char> dialedNumber)
+        {
+            if (!dialedNumber.IsEmpty && dialedNumber.Length is 10)
+            {
+                bool checkNpa = int.TryParse(dialedNumber[..3], out int npa);
+                bool checkNxx = int.TryParse(dialedNumber.Slice(3, 3), out int nxx);
+                bool checkXxxx = int.TryParse(dialedNumber.Slice(6, 4), out int xxxx);
 
                 if (checkNpa && checkNxx && checkXxxx)
                 {
@@ -973,22 +1073,27 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool IsValidPhoneNumber(this string input)
         {
-            if (string.IsNullOrWhiteSpace(input) || input.Length < 10)
+            return IsValidPhoneNumber(input.AsSpan());
+        }
+
+        /// <summary>
+        /// Check if a string is a valid NANPA phone number in the format of "NXXNXXXXXX"
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsValidPhoneNumber(this ReadOnlySpan<char> input)
+        {
+            if (input.IsEmpty || input.Length < 10)
             {
                 return false;
             }
-            else
-            {
-                // Clean up the query.
-                input = input.Trim().ToLowerInvariant();
-            }
 
             // Parse the query.
-            List<char> converted = new();
+            List<char> converted = new(10);
             foreach (char letter in input)
             {
-                // Allow digits.
-                if (char.IsDigit(letter))
+                // Allow digits, drop leading 1's as NANPA area codes start at 201.
+                if (char.IsDigit(letter) && (letter is not '1' || converted.Any()))
                 {
                     converted.Add(letter);
                 }
@@ -1000,13 +1105,7 @@ namespace PhoneNumbersNA
                 // Drop everything else.
             }
 
-            // Drop leading 1's to improve the copy/paste experiance.
-            if (converted.Count > 0 && converted[0] is '1' && converted.Count > 10)
-            {
-                converted.Remove('1');
-            }
-
-            return ValidPhoneNumber(converted.ToArray().AsSpan().ToString());
+            return ValidPhoneNumber(CollectionsMarshal.AsSpan(converted));
         }
 
         /// <summary>
@@ -1016,102 +1115,75 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static IEnumerable<string> ExtractDialedNumbers(this string str)
         {
+            return ExtractDialedNumbers(str.AsSpan());
+        }
+
+        public static IEnumerable<string> ExtractDialedNumbers(ReadOnlySpan<char> str)
+        {
             List<string> parsedNumbers = new();
 
-            if (!string.IsNullOrWhiteSpace(str))
+            if (!str.IsEmpty)
             {
-                string[] numberCanidates = str.Trim()
-                    .Replace(") ", "")
-                    .Replace("(", "")
-                    .Replace(" ", "")
-                    .Replace(",", " ")
-                    .Replace("\r\n", " ")
-                    .Split();
+                List<char> converted = new(10);
 
-                foreach (string query in numberCanidates)
+                foreach (char letter in str)
                 {
-                    // Parse the query.
-                    List<char> converted = new();
-                    foreach (char letter in query)
+                    // Allow digits, drop leading 1's as NANPA area codes start at 201.
+                    if (char.IsDigit(letter) && (letter is not '1' || converted.Any()))
                     {
-                        // Allow digits.
-                        if (char.IsDigit(letter))
-                        {
-                            converted.Add(letter);
-                        }
-                        // Drop everything else.
+                        converted.Add(letter);
                     }
-
-                    // Drop leading 1's to improve the copy/paste experiance.
-                    if (converted.Count > 0 && converted.Count > 10 && converted[0] is '1')
-                    {
-                        converted.Remove('1');
-                    }
+                    // Drop everything else.
 
                     // Only if its a perfect number do we want to return it.
-                    if (converted.Count is 10)
+                    ReadOnlySpan<char> numberSpan = CollectionsMarshal.AsSpan(converted);
+                    if (converted.Count is 10 && numberSpan.IsValidPhoneNumber())
                     {
-                        parsedNumbers.Add(converted.ToArray().AsSpan().ToString());
+                        parsedNumbers.Add(numberSpan.ToString());
+                        converted.Clear();
                     }
                 }
             }
+
             return parsedNumbers;
         }
 
         public static IEnumerable<PhoneNumber> ExtractPhoneNumbers(this string str)
         {
+            return ExtractPhoneNumbers(str.AsSpan());
+        }
+
+        public static IEnumerable<PhoneNumber> ExtractPhoneNumbers(this ReadOnlySpan<char> str)
+        {
             List<PhoneNumber> parsedNumbers = new();
 
-            if (!string.IsNullOrWhiteSpace(str))
+            if (!str.IsEmpty)
             {
-                ReadOnlySpan<char> cleanedInput = str.Trim()
-                    .Replace(") ", "")
-                    .Replace("(", "")
-                    .Replace(" ", "")
-                    .Replace(",", " ")
-                    .Replace("\r\n", " ")
-                    .AsSpan();
+                List<char> converted = new(10);
 
-                int sliceIndex = 0;
-                ReadOnlySpan<char> query = new();
-                while (sliceIndex > -1)
+                foreach (char letter in str)
                 {
-                    sliceIndex = cleanedInput.IndexOf(' ');
-                    if (sliceIndex != -1)
+                    // Allow digits, drop leading 1's as NANPA area codes start at 201.
+                    if (char.IsDigit(letter) && (letter is not '1' || converted.Any()))
                     {
-                        query = cleanedInput[..sliceIndex];
-                        cleanedInput = cleanedInput[(sliceIndex + 1)..];
+                        converted.Add(letter);
                     }
+                    // Drop everything else.
 
-                    // Parse the query.
-                    List<char> converted = new();
-                    foreach (char letter in query)
+                    // Only if its a perfect number do we want to return it.
+                    ReadOnlySpan<char> numberSpan = CollectionsMarshal.AsSpan(converted);
+                    if (converted.Count is 10 && numberSpan.IsValidPhoneNumber())
                     {
-                        // Allow digits.
-                        if (char.IsDigit(letter))
-                        {
-                            converted.Add(letter);
-                        }
-                        // Drop everything else.
-                    }
-
-                    // Drop leading 1's to improve the copy/paste experiance.
-                    if (converted.Count > 0 && converted.Count > 10 && converted[0] is '1')
-                    {
-                        converted.Remove('1');
-                    }
-
-                    // Only if its a perfect number do we want to query for it.
-                    if (converted.Count is 10)
-                    {
-                        bool checkParse = PhoneNumber.TryParseExact(converted, out PhoneNumber phoneNumber);
+                        bool checkParse = PhoneNumber.TryParseExact(CollectionsMarshal.AsSpan(converted), out PhoneNumber number);
                         if (checkParse)
                         {
-                            parsedNumbers.Add(phoneNumber);
+                            parsedNumbers.Add(number);
                         }
+                        converted.Clear();
                     }
                 }
             }
+
             return parsedNumbers;
         }
     }
@@ -1138,22 +1210,40 @@ namespace PhoneNumbersNA
         public static bool TryParse(string input, out PhoneNumber number)
         {
             // Fail fast
-            if (input is null || input?.Length < 10)
+            if (input.Length < 10 || string.IsNullOrWhiteSpace(input))
             {
                 number = new();
                 return false;
             }
+
+            bool checkParse = TryParse(input.AsSpan(), out PhoneNumber phoneNumber);
+            if (checkParse)
+            {
+                number = phoneNumber;
+                return true;
+            }
             else
             {
-                // Clean up the query.
-                input = input?.Trim().ToLowerInvariant() ?? string.Empty;
+                number = new();
+                return false;
+            }
+        }
+
+        public static bool TryParse(ReadOnlySpan<char> input, out PhoneNumber number)
+        {
+            // Fail fast
+            if (input.IsEmpty || input.Length < 10)
+            {
+                number = new();
+                return false;
             }
 
-            List<char> converted = new();
+            // Create the list with 10 slots to prevent unnessesary resizing.
+            List<char> converted = new(10);
             foreach (char letter in input)
             {
-                // Allow digits.
-                if (char.IsDigit(letter))
+                // Allow digits, drop leading 1's as NANPA area codes start at 201.
+                if (char.IsDigit(letter) && (letter is not '1' || converted.Any()))
                 {
                     converted.Add(letter);
                 }
@@ -1165,12 +1255,6 @@ namespace PhoneNumbersNA
                 // Drop everything else.
             }
 
-            // Drop leading 1's to improve the copy/paste experiance.
-            if (converted.Count > 0 && converted[0] == '1' && converted.Count > 10)
-            {
-                converted.Remove('1');
-            }
-
             // This input can't be parsed, so bail out.
             if (converted.Count is not 10)
             {
@@ -1178,13 +1262,13 @@ namespace PhoneNumbersNA
                 return false;
             }
 
-            var cleanedQuery = converted.ToArray().AsSpan();
+            Span<char> cleanedQuery = CollectionsMarshal.AsSpan(converted);
 
             bool checkNpa = int.TryParse(cleanedQuery[..3], out int npa);
             bool checkNxx = int.TryParse(cleanedQuery.Slice(3, 3), out int nxx);
             bool checkXxxx = int.TryParse(cleanedQuery.Slice(6, 4), out int xxxx);
 
-            var checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
+            bool checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
 
             if (checkNpa && checkNxx && checkXxxx && checkValid)
             {
@@ -1258,15 +1342,13 @@ namespace PhoneNumbersNA
             }
         }
 
-        public static bool TryParseExact(IEnumerable<char> input, out PhoneNumber number)
+        public static bool TryParseExact(ReadOnlySpan<char> input, out PhoneNumber number)
         {
-            var cleanedQuery = input.ToArray().AsSpan();
+            bool checkNpa = int.TryParse(input[..3], out int npa);
+            bool checkNxx = int.TryParse(input.Slice(3, 3), out int nxx);
+            bool checkXxxx = int.TryParse(input.Slice(6, 4), out int xxxx);
 
-            bool checkNpa = int.TryParse(cleanedQuery[..3], out int npa);
-            bool checkNxx = int.TryParse(cleanedQuery.Slice(3, 3), out int nxx);
-            bool checkXxxx = int.TryParse(cleanedQuery.Slice(6, 4), out int xxxx);
-
-            var checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
+            bool checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
 
             if (checkNpa && checkNxx && checkXxxx && checkValid)
             {
@@ -1274,7 +1356,7 @@ namespace PhoneNumbersNA
                 {
                     number = new PhoneNumber
                     {
-                        DialedNumber = cleanedQuery.ToString(),
+                        DialedNumber = input.ToString(),
                         NPA = npa,
                         NXX = nxx,
                         XXXX = xxxx,
@@ -1286,7 +1368,7 @@ namespace PhoneNumbersNA
                 {
                     number = new PhoneNumber
                     {
-                        DialedNumber = cleanedQuery.ToString(),
+                        DialedNumber = input.ToString(),
                         NPA = npa,
                         NXX = nxx,
                         XXXX = xxxx,
@@ -1298,7 +1380,7 @@ namespace PhoneNumbersNA
                 {
                     number = new PhoneNumber
                     {
-                        DialedNumber = cleanedQuery.ToString(),
+                        DialedNumber = input.ToString(),
                         NPA = npa,
                         NXX = nxx,
                         XXXX = xxxx,
@@ -1310,7 +1392,7 @@ namespace PhoneNumbersNA
                 {
                     number = new PhoneNumber
                     {
-                        DialedNumber = cleanedQuery.ToString(),
+                        DialedNumber = input.ToString(),
                         NPA = npa,
                         NXX = nxx,
                         XXXX = xxxx,
@@ -1322,7 +1404,7 @@ namespace PhoneNumbersNA
                 {
                     number = new PhoneNumber
                     {
-                        DialedNumber = cleanedQuery.ToString(),
+                        DialedNumber = input.ToString(),
                         NPA = npa,
                         NXX = nxx,
                         XXXX = xxxx,
@@ -1352,20 +1434,25 @@ namespace PhoneNumbersNA
             {
                 '+' => '0',
                 // The digit 1 isn't mapped to any chars on a phone keypad.
-                'a' or 'b' or 'c' => '2',
-                'd' or 'e' or 'f' => '3',
-                'g' or 'h' or 'i' => '4',
-                'j' or 'k' or 'l' => '5',
-                'm' or 'n' or 'o' => '6',
-                'p' or 'q' or 'r' or 's' => '7',
-                't' or 'u' or 'v' => '8',
-                'w' or 'x' or 'y' or 'z' => '9',
+                'a' or 'A' or 'b' or 'B' or 'c' or 'C' => '2',
+                'd' or 'D' or 'e' or 'E' or 'f' or 'F' => '3',
+                'g' or 'G' or 'h' or 'H' or 'i' or 'I' => '4',
+                'j' or 'J' or 'k' or 'K' or 'l' or 'L' => '5',
+                'm' or 'M' or 'n' or 'N' or 'o' or 'O' => '6',
+                'p' or 'P' or 'q' or 'Q' or 'r' or 'R' or 's' or 'S' => '7',
+                't' or 'T' or 'u' or 'U' or 'v' or 'V' => '8',
+                'w' or 'W' or 'x' or 'X' or 'y' or 'Y' or 'z' or 'Z' => '9',
                 // If the char isn't mapped to anything, respect it's existence by mapping it to a wildcard.
                 _ => '*',
             };
         }
 
-        public bool IsValid() => DialedNumber?.IsValidPhoneNumber() ?? false && AreaCode.ValidNPA(NPA) && AreaCode.ValidNXX(NXX) && AreaCode.ValidXXXX(XXXX);
+        public string GetNPAAsString() => NPA.ToString("000");
+        public string GetNXXAsString() => NPA.ToString("000");
+        public string GetXXXXAsString() => NPA.ToString("0000");
+
+
+        public bool IsValid() => DialedNumber.IsValidPhoneNumber() && AreaCode.ValidNPA(NPA) && AreaCode.ValidNXX(NXX) && AreaCode.ValidXXXX(XXXX);
 
         public override string ToString() => JsonSerializer.Serialize(this);
     }

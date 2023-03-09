@@ -6,13 +6,13 @@ using PhoneNumbersNA;
 
 Console.WriteLine("Hello, World!");
 
-var summary = BenchmarkRunner.Run<Data>();
+_ = BenchmarkRunner.Run<Data>();
 
 [MemoryDiagnoser]
 public class Data
 {
     // https://nationalnanpa.com/contact_us/NANP_Country_Contacts.pdf
-    string[] NANPContactsSmall = new string[]
+    readonly string[] NANPContactsSmall = new string[]
     {
                 "264 497-2651", "264-497-3651", "268- 468-4616", "242-393-0234",
                 "242-393-0153", "246- 535-2502", "441-405-6000", "441-474-6048",
@@ -29,7 +29,7 @@ public class Data
                 "202-418-1525","202-418-1413","925-420-0340","571-363-3838",
     };
 
-    string[] NANPContactsLarge = new string[]
+    readonly string[] NANPContactsLarge = new string[]
     {
                 "264 497-2651", "264-497-3651", "268- 468-4616", "242-393-0234",
                 "242-393-0153", "246- 535-2502", "441-405-6000", "441-474-6048",
@@ -163,7 +163,7 @@ public class Data
                 "202-418-1525","202-418-1413","925-420-0340","571-363-3838",
     };
 
-    string NANPContactsStringSmall =
+    readonly string NANPContactsStringSmall =
                 "264 497-2651,264-497-3651,268- 468-4616,242-393-0234," +
                 "242-393-0153,246- 535-2502,441-405-6000,441-474-6048," +
                 "284-468-2183,284-468-3090,284-468-4165,284-494- 6786," +
@@ -182,7 +182,7 @@ public class Data
                 "649-946-1900,649-946-1119,202-418-1500,202-418-2825," +
                 "202-418-1525,202-418-1413,925-420-0340,571-363-3838,";
 
-    string NANPContactsStringLarge =
+    readonly string NANPContactsStringLarge =
                 "264 497-2651,264-497-3651,268- 468-4616,242-393-0234," +
                 "242-393-0153,246- 535-2502,441-405-6000,441-474-6048," +
                 "284-468-2183,284-468-3090,284-468-4165,284-494- 6786," +
@@ -354,7 +354,7 @@ public class Data
                 "649-946-1900,649-946-1119,202-418-1500,202-418-2825," +
                 "202-418-1525,202-418-1413,925-420-0340,571-363-3838,";
 
-    string realWorld = "+1 206-858-9310\r\n2024561414\r\n(206)858-8757\r\nRandom Jibberish that should be stripped";
+    readonly string realWorld = "+1 206-858-9310\r\n2024561414\r\n(206)858-8757\r\nRandom Jibberish that should be stripped";
 
     public IEnumerable<object> NumbersString() // for multiple arguments it's an IEnumerable of array of objects (object[])
     {
@@ -363,7 +363,7 @@ public class Data
         yield return NANPContactsStringLarge;
     }
 
-    public IEnumerable<object> Number()
+    public static IEnumerable<object> Number()
     {
         yield return "+1 206-858-9310";
         yield return "ppboi";
@@ -386,17 +386,5 @@ public class Data
 
     [Benchmark]
     [ArgumentsSource(nameof(Number))]
-    public PhoneNumber TryParseBenchmark(string input)
-    {
-        var checkParse = PhoneNumber.TryParse(input, out var phoneNumber);
-
-        if (checkParse && phoneNumber is not null)
-        {
-            return phoneNumber;
-        }
-        else
-        {
-            return new PhoneNumber();
-        }
-    }
+    public bool TryParseBenchmark(string input) => PhoneNumber.TryParse(input, out var _);
 }
