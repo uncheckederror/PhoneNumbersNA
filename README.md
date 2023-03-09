@@ -9,7 +9,7 @@ The core of this library is the
 ```csharp
 var checkParse = PhoneNumber.TryParse(string input, out var phoneNumber);
 ```
-function that accepts a string that you would like to parse into a single phone number. It mimics the format of ```int.TryParse(string input, out var value)``` to make it easy to use and reason about. The PhoneNumber type that is returned in the out variable contains a variety of useful properties including a 10 digit string named DialedNumber which is what you would literally dial on a phone's keypad to place a call to that number. The components of the DialedNumber are also provided as integers to make them easy to work with and cheap to store. Please note, to convert the NPA, NXX, and XXXX properties to strings you'll need to use the ```phoneNumber.NPA.ToString("000")``` method to preserve any leading zeros that aren't represented by the integer format.
+function that accepts a string that you would like to parse into a single phone number. It mimics the format of ```int.TryParse(string input, out var value)``` to make it easy to use and reason about. The PhoneNumber type that is returned in the out variable contains a variety of useful properties including a 10 digit string named DialedNumber which is what you would literally dial on a phone's keypad to place a call to that number. The components of the DialedNumber are also provided as integers to make them easy to work with and cheap to store. Please note, to convert the NPA, NXX, and XXXX properties to strings you'll need to use the ```phoneNumber.NPA.ToString("000")``` method to preserve any leading zeros that aren't represented by the integer format. To make this senario less error pront we've added ```phoneNumber.GetNPAAsString()``` to handle this formatting issue for you. We've also exposed versions of all the methods that accept strings with alternate versions that accept ```ReadOnlySpan<char>``` to help you save some memory.
 
 To parse a string that may contain many phone numbers use the extension method on the String class included in this library:
 ```csharp
@@ -44,7 +44,7 @@ A common scenario when working with 3rd party VOIP API's like the [Teli API](htt
   
 Some APIs require you to provide the name of the state the area code you are looking for existing within geographically. To that end you can use the ```PhoneNumbers.AreaCode.AreaCodesByState``` array to get a list of objects containing strings for both the short and long versions of state names and an array of all the area codes in that specific state.
   
-Often phone number purchasing APIs make a distinction between Local phone numbers and Tollfree phone numbers. The PhoneNumber type contains a Type property that is accessible after you call the TryParse method on the string representation of a phone number. This Type property is an Enum with a value of Tollfree, NonGeographic, or Local depending on how the phone number was parsed. Using this information, you can chose the correct API endpoint to submit purchase order for that number to. If you prefer to figure out the Type of the number directly you can use the string extension methods 
+Often phone number purchasing APIs make a distinction between Local phone numbers and Tollfree phone numbers. The PhoneNumber class contains a Type property that is accessible after you call the TryParse method on the string representation of a phone number. This Type property is an Enum with a value of Tollfree, NonGeographic, or Local depending on how the phone number was parsed. Using this information, you can chose the correct API endpoint to submit purchase order for that number to. If you prefer to figure out the Type of the number directly you can use the string extension methods 
 ```csharp
 var checkNonGeographic = "9990221111".IsNonGeographic()
 ```
@@ -56,12 +56,14 @@ to get a Boolean as an answer.
 
 This library is used in production by [Accelerate Networks](https://github.com/AccelerateNetworks/NumberSearch) and grew organically out of a large set of utility functions that have now been condensed into PhoneNumbersNA. 🥳
 
-Update 2/22/2022: Discussion of updates and improvements version 1.0.4 in this [Twitter thread.](https://twitter.com/UncheckedError/status/1496217725559005186)
-
 ### Performance 🚅 ###
-You can run the benchmarks for this library on your local machine by cloning this repo and then opening the solution file in Visual Studio 2022. Select the PhoneNumbersNA.Benchmark console app and then run it as a "Release" build. The benchmarks typically take about 4 minutes to run. Alternatively you can install the .NET SDK and use .NET CLI to build the project in release mode and run it.
+You can run the benchmarks for this library on your local machine by cloning this repo and then opening the solution file in Visual Studio 2022. Select the PhoneNumbersNA.Benchmark console app and then run it as a "Release" build. The benchmarks typically take about 3 minutes to run. Alternatively you can install the .NET SDK and use .NET CLI to build the project in release mode and run it.
 
 Here are the benchmarks for the current version of PhoneNumbersNA:
+
+![image](https://user-images.githubusercontent.com/11726956/223918152-cf8df516-c69c-4cf8-b63e-c6bcc8cdb8ff.png)
+
+This is quite an improvement over the .NET 6 version. Memory consumption is cut by 2/3rds in the 84, 887, and 8870 phone number benchmarks. For single numbers and in our 84 phone number benchmark performance is also improved by about 50%. These gains come mostly from the use of ```ReadOnlySpan<char>``` and ```CollectionsMarshall.AsSpan(List<char>)``` where ```string``` and ```new string(List<char>.ToArray())``` was previously used. These changes have prevented many unnecessary string allocations which is why memory consumption has been reduced so significantly. This library will never be allocation free as we're parsing and creating new strings, but we can get close.
 
 ![image](https://user-images.githubusercontent.com/11726956/155625946-5931aa98-b577-4bad-b5d5-0618cb9e1ac4.png)
 
@@ -70,6 +72,6 @@ Please start by creating a new issue with a description of the problem and a met
   
 ### How to run this project locally 🏃 ###
   * Clone the repo to your machine
-  * dotnet 6.0 or greater is required (included in Visual Studio 2022)
+  * .NET 7.0 or greater is required (included in Visual Studio 2022)
   * Use [Visual Studio 2022 Community Edition](https://visualstudio.microsoft.com/vs/preview/) or VSCode with the dotnet CLI and CSharp language extension to edit, build, and run the test suite.
   * Double click the "PhoneNumbersNA.sln" file to open the solution in Visual Studio 2022.
