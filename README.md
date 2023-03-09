@@ -1,3 +1,5 @@
+[![CodeQL](https://github.com/uncheckederror/PhoneNumbersNA/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/uncheckederror/PhoneNumbersNA/actions/workflows/codeql-analysis.yml)
+[![.NET](https://github.com/uncheckederror/PhoneNumbersNA/actions/workflows/dotnet.yml/badge.svg)](https://github.com/uncheckederror/PhoneNumbersNA/actions/workflows/dotnet.yml)
 # PhoneNumbersNA
 A library for parsing phone numbers. Built around the [North American Numbering Plan](https://en.wikipedia.org/wiki/North_American_Numbering_Plan) and the [NANPA](https://nationalnanpa.com/) formal specification.
 
