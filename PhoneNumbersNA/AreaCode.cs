@@ -1188,6 +1188,7 @@ namespace PhoneNumbersNA
         }
     }
 
+    // The NANPA phone number types.
     public enum NumberType
     {
         Local,
@@ -1197,6 +1198,9 @@ namespace PhoneNumbersNA
         Canada
     }
 
+    /// <summary>
+    /// A strongly typed representation of a NANPA phone number.
+    /// </summary>
     public class PhoneNumber
     {
         public string DialedNumber { get; set; } = string.Empty;
@@ -1207,6 +1211,12 @@ namespace PhoneNumbersNA
         public DateTime DateIngested { get; set; }
         public string IngestedFrom { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Parse a string into a strongly typed NANPA phone number.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
         public static bool TryParse(string input, out PhoneNumber number)
         {
             // Fail fast
@@ -1229,6 +1239,12 @@ namespace PhoneNumbersNA
             }
         }
 
+        /// <summary>
+        /// Parse a series of characters into a strongly typed NANPA phone number.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="number"></param>
+        /// <returns>True if a valid phone number was parsed and false if not.</returns>
         public static bool TryParse(ReadOnlySpan<char> input, out PhoneNumber number)
         {
             // Fail fast
@@ -1342,6 +1358,12 @@ namespace PhoneNumbersNA
             }
         }
 
+        /// <summary>
+        /// For use when you've already proven that you have a valid phone number.
+        /// </summary>
+        /// <param name="input">The raw chars of the phone number.</param>
+        /// <param name="number"></param>
+        /// <returns>A strongly typed phone number.</returns>
         public static bool TryParseExact(ReadOnlySpan<char> input, out PhoneNumber number)
         {
             bool checkNpa = int.TryParse(input[..3], out int npa);
@@ -1447,13 +1469,45 @@ namespace PhoneNumbersNA
             };
         }
 
+        /// <summary>
+        /// Preserve leading zeros in NPAs.
+        /// </summary>
+        /// <returns>A zero padded NPA.</returns>
         public string GetNPAAsString() => NPA.ToString("000");
-        public string GetNXXAsString() => NPA.ToString("000");
-        public string GetXXXXAsString() => NPA.ToString("0000");
+        /// <summary>
+        /// Preserve leading zeros in an NXX.
+        /// </summary>
+        /// <returns>A zero padded NXX.</returns>
+        public string GetNXXAsString() => NXX.ToString("000");
+        /// <summary>
+        /// Preserve leading zeros in an XXXX.
+        /// </summary>
+        /// <returns>A zero padded XXXX.</returns>
+        public string GetXXXXAsString() => XXXX.ToString("0000");
 
+        /// <summary>
+        /// Return the phone number formatted as a Uniform Resource Identifier.
+        /// https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+        /// </summary>
+        /// <returns></returns>
+        public Uri GetAsURI()
+        {
+            UriBuilder builder = new UriBuilder();
+            builder.Scheme = "tel";
+            builder.Path = $"+1-{GetNPAAsString()}-{GetNXXAsString()}-{GetXXXXAsString()}";
+            return builder.Uri;
+        }
 
+        /// <summary>
+        /// Verifies that the phone number is valid.
+        /// </summary>
+        /// <returns>True if valid, false if invalid.</returns>
         public bool IsValid() => DialedNumber.IsValidPhoneNumber() && AreaCode.ValidNPA(NPA) && AreaCode.ValidNXX(NXX) && AreaCode.ValidXXXX(XXXX);
 
+        /// <summary>
+        /// A string representation of the Phone Number object.
+        /// </summary>
+        /// <returns>A JSON representation of the Phone Number object as a string.</returns>
         public override string ToString() => JsonSerializer.Serialize(this);
     }
 }
