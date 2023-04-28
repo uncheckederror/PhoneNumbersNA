@@ -363,10 +363,11 @@ public class Data
         yield return NANPContactsStringLarge;
     }
 
-    public static IEnumerable<object> Number()
+    public static IEnumerable<object> Numbers()
     {
         yield return "+1 206-858-9310";
-        yield return "ppboi";
+        yield return "notlongen";
+        yield return "FUNNY";
         yield return "1 (111) 111-1111";
     }
 
@@ -385,6 +386,6 @@ public class Data
     public PhoneNumber[] AsPhoneNumbersBenchmark(string input) => Parse.AsPhoneNumbers(input).ToArray();
 
     [Benchmark]
-    [ArgumentsSource(nameof(Number))]
+    [ArgumentsSource(nameof(Numbers))]
     public bool TryParseBenchmark(string input) => PhoneNumber.TryParse(input, out var _);
 }

@@ -37,6 +37,11 @@ namespace PhoneNumbersNA.Test
                 "202-418-1525","202-418-1413","925-420-0340","571-363-3838",
         };
 
+        readonly string[] CenturyLinkShortCodes = new string[]
+        {
+                "67378", "58865", "275285", "30471"
+        };
+
         readonly string manyNumbers = "+1 206-858-9310\r\n2024561414\r\n(206)858-8757\r\nRandom Gibberish that should be stripped";
 
         readonly string[] badNumbers = new string[]
@@ -103,17 +108,42 @@ namespace PhoneNumbersNA.Test
         [Fact]
         public void TryParseBenchmark()
         {
-            var checkParse = PhoneNumber.TryParse("ppboi", out var phoneNumber);
+            var checkParse = PhoneNumber.TryParse("ppboinine", out var phoneNumber);
 
             Assert.False(checkParse);
-            Assert.True(phoneNumber is not null);
+            Assert.NotNull(phoneNumber);
+            Assert.True(phoneNumber.DialedNumber == string.Empty);
+
+            checkParse = PhoneNumber.TryParse("2sma", out phoneNumber);
+
+            Assert.False(checkParse);
+            Assert.NotNull(phoneNumber);
             Assert.True(phoneNumber.DialedNumber == string.Empty);
 
             checkParse = PhoneNumber.TryParse("1 (111) 111-1111", out phoneNumber);
 
             Assert.False(checkParse);
-            Assert.True(phoneNumber is not null);
+            Assert.NotNull(phoneNumber);
             Assert.True(phoneNumber.DialedNumber == string.Empty);
+
+            checkParse = PhoneNumber.TryParse("15555551212", out phoneNumber);
+
+            Assert.False(checkParse);
+            Assert.NotNull(phoneNumber);
+            Assert.True(phoneNumber.DialedNumber == string.Empty);
+
+            checkParse = PhoneNumber.TryParse("12068589310", out phoneNumber);
+
+            Assert.True(checkParse);
+            Assert.NotNull(phoneNumber);
+            Assert.True(phoneNumber.DialedNumber != string.Empty);
+
+            // Short code
+            checkParse = PhoneNumber.TryParse("FUNNY", out phoneNumber);
+
+            Assert.True(checkParse);
+            Assert.NotNull(phoneNumber);
+            Assert.True(phoneNumber.DialedNumber != string.Empty);
         }
 
         [Fact]
@@ -137,6 +167,20 @@ namespace PhoneNumbersNA.Test
                 Assert.True(AreaCode.ValidPhoneNumber(number.Replace(" ", string.Empty).Replace("-", string.Empty)));
             }
         }
+
+        [Fact]
+        public void ShortCodes()
+        {
+            foreach (var number in CenturyLinkShortCodes)
+            {
+                Assert.False(number.IsValidPhoneNumber());
+                Assert.False(AreaCode.ValidPhoneNumber(number));
+                Assert.True(PhoneNumber.TryParse(number, out PhoneNumber parsedNumber));
+                Assert.Equal(number, parsedNumber.DialedNumber);
+                Assert.Equal(PhoneNumbersNA.NumberType.ShortCode, parsedNumber.Type);
+            }
+        }
+
 
         [Fact]
         public void InvalidNumbers()

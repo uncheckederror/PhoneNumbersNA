@@ -35,7 +35,7 @@ namespace PhoneNumbersNA
         public static readonly int[] All = new int[]
         {
             201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 223, 224, 225, 226, 227, 228, 229, 231, 234, 235, 236, 239, 240, 242, 246, 248, 249, 250, 251, 252, 253, 254, 256, 260, 262, 263, 264, 267, 268, 269, 270, 272, 274, 276, 278, 279, 281, 283, 284, 289,
-            301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 323, 325, 326, 327, 330, 331, 332, 334, 336, 337, 339, 340, 341, 343, 345, 346, 347, 350, 351, 352, 354, 360, 361, 363, 364, 365, 367, 368, 369, 380, 381, 385, 386, 387,
+            301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 323, 325, 326, 327, 329, 330, 331, 332, 334, 336, 337, 339, 340, 341, 343, 345, 346, 347, 350, 351, 352, 354, 360, 361, 363, 364, 365, 367, 368, 369, 380, 381, 385, 386, 387,
             401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 423, 424, 425, 428, 430, 431, 432, 434, 435, 437, 438, 440, 441, 442, 443, 445, 447, 448, 450, 456, 458, 463, 464, 468, 469, 470, 472, 473, 474, 475, 478, 479, 480, 484,
             500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 538, 539, 540, 541, 544, 548, 551, 557, 559, 561, 562, 563, 564, 566, 567, 570, 571, 572, 573, 574, 575, 577, 578, 579, 580, 581, 582, 584, 585, 586, 587, 588,
             600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 612, 613, 614, 615, 616, 617, 618, 619, 620, 622, 623, 626, 628, 629, 630, 631, 636, 639, 640, 641, 646, 647, 649, 650, 651, 656, 657, 658, 659, 660, 661, 662, 664, 667, 669, 670, 671, 672, 678, 679, 680, 681, 682, 683, 684, 689,
@@ -1195,7 +1195,8 @@ namespace PhoneNumbersNA
         Tollfree,
         NonGeographic,
         CountryOrTerritory,
-        Canada
+        Canada,
+        ShortCode
     }
 
     /// <summary>
@@ -1222,6 +1223,17 @@ namespace PhoneNumbersNA
             // Fail fast
             if (input.Length < 10 || string.IsNullOrWhiteSpace(input))
             {
+                // Handle SMS only short codes.
+                if (input.Length is 5 || input.Length is 6)
+                {
+                    var checkShort = TryParseShortCode(input.AsSpan(), out PhoneNumber shortCode);
+
+                    if (checkShort)
+                    {
+                        number = shortCode;
+                        return true;
+                    }
+                }
                 number = new();
                 return false;
             }
@@ -1435,6 +1447,57 @@ namespace PhoneNumbersNA
                     };
                 }
 
+                return true;
+            }
+            else
+            {
+                number = new();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Handle 5 and 6 character SMS only short codes.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static bool TryParseShortCode(ReadOnlySpan<char> input, out PhoneNumber number)
+        {
+            // Fail fast
+            if (input.IsEmpty || input.Length < 5)
+            {
+                number = new();
+                return false;
+            }
+
+            // Create the list with default slots to prevent unnessesary resizing.
+            List<char> converted = new(input.Length);
+            foreach (char letter in input)
+            {
+                // Allow digits.
+                if (char.IsDigit(letter))
+                {
+                    converted.Add(letter);
+                }
+                // Convert letters to digits for codes like FUNNY 38669.
+                else if (char.IsLetter(letter))
+                {
+                    converted.Add(PhoneNumber.LetterToKeypadDigit(letter));
+                }
+                // Drop everything else.
+            }
+
+            // This input can't be parsed, so bail out.
+            if (converted.Count is 5 || converted.Count is 6)
+            {
+                Span<char> cleanedQuery = CollectionsMarshal.AsSpan(converted);
+                number = new()
+                {
+                    DialedNumber = cleanedQuery.ToString(),
+                    Type = NumberType.ShortCode,
+                    DateIngested = DateTime.Now,
+                };
                 return true;
             }
             else
