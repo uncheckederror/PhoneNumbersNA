@@ -1223,8 +1223,8 @@ namespace PhoneNumbersNA
             // Fail fast
             if (input.Length < 10 || string.IsNullOrWhiteSpace(input))
             {
-                // Handle SMS only short codes.
-                if (input.Length is 5 || input.Length is 6)
+                // Handle SMS only short codes (maybe prefixed with a 1 on accident).
+                if (input.Length is 5 || input.Length is 6 || input.Length is 7)
                 {
                     var checkShort = TryParseShortCode(input.AsSpan(), out PhoneNumber shortCode);
 
@@ -1476,7 +1476,8 @@ namespace PhoneNumbersNA
             foreach (char letter in input)
             {
                 // Allow digits.
-                if (char.IsDigit(letter))
+                // Short codes cannot start with a 1 or a 0.
+                if (char.IsDigit(letter) && (letter is not '1' || converted.Any()) && (letter is not '0' || converted.Any()))
                 {
                     converted.Add(letter);
                 }

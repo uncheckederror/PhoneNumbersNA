@@ -144,6 +144,13 @@ namespace PhoneNumbersNA.Test
             Assert.True(checkParse);
             Assert.NotNull(phoneNumber);
             Assert.True(phoneNumber.DialedNumber != string.Empty);
+
+            // Short code with incorrect 1 prefix.
+            checkParse = PhoneNumber.TryParse("140404", out phoneNumber);
+
+            Assert.True(checkParse);
+            Assert.NotNull(phoneNumber);
+            Assert.True(phoneNumber.DialedNumber != string.Empty);
         }
 
         [Fact]
