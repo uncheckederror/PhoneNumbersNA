@@ -74,6 +74,6 @@ Please start by creating a new issue with a description of the problem and a met
   
 ### How to run this project locally 🏃 ###
   * Clone the repo to your machine
-  * .NET 7.0 or greater is required (included in Visual Studio 2022)
+  * .NET 8.0 or greater is required (included in Visual Studio 2022)
   * Use [Visual Studio 2022 Community Edition](https://visualstudio.microsoft.com/vs/preview/) or VSCode with the dotnet CLI and CSharp language extension to edit, build, and run the test suite.
   * Double click the "PhoneNumbersNA.sln" file to open the solution in Visual Studio 2022.
