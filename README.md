@@ -62,6 +62,9 @@ This library is used in production by [Accelerate Networks](https://github.com/A
 You can run the benchmarks for this library on your local machine by cloning this repo and then opening the solution file in Visual Studio 2022. Select the PhoneNumbersNA.Benchmark console app and then run it as a "Release" build. The benchmarks typically take about 3 minutes to run. Alternatively you can install the .NET SDK and use .NET CLI to build the project in release mode and run it.
 
 Here are the benchmarks for the current version of PhoneNumbersNA:
+![image](https://github.com/user-attachments/assets/62639a3d-3a43-4dd5-afe9-d45fad1ba66e)
+
+This is quite an improvement over the .NET 7 version. Parsing both valid and invalid phone numbers is more than twice as fast, while consuming just 2/3rds the memory. In the large (887) and very large (8870) phone number benchmarks we've pushed allocations down from Gen1 to Gen0, reducing pressure on the garbage collector. Although total allocated bytes is about the same, we still see benifits from reducing GC pressure like 50% better performance in the 887 and 8870 AsPhoneNumbers benchmarks and reduced Error and StdDev values across all the benchmarks. These gains are thanks to aggressive use of the ```ref``` keyword for parameters and the conversion of ```public class PhoneNumber(string DialedNumber, ...)``` to ```public readonly record struct PhoneNumber(ref readonly string DialedNumber, ...)``` .
 
 ![image](https://user-images.githubusercontent.com/11726956/223918152-cf8df516-c69c-4cf8-b63e-c6bcc8cdb8ff.png)
 
