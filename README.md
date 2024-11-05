@@ -21,7 +21,7 @@ which will return an array of 10 digit phone numbers as strings. If you prefer t
 ```csharp
 var stronglyTypedPhoneNumbers = "12060009999 15030006969 18750001111".ExtractPhoneNumbers();
 ```
-extension method to get an ```IEnumerable<PhoneNumber>``` result.
+extension method to get an ```ReadOnlySpan<PhoneNumber>``` result.
 
 Alternatively you can call the parsing methods directly using:
 ```csharp
@@ -29,7 +29,7 @@ var stringlyTypedPhoneNumbers = PhoneNumbersNA.Parse.AsDialedNumbers("1206000999
 var stronglyTypedPhoneNumbers = PhoneNumbersNA.Parse.AsPhoneNumbers("12060009999 15030006969 18750001111");
 ```
   
-If you simply want a yes or no answer to whether a string is a valid NANP phone number you can use the 
+If you simply want a yes or no answer to whether a string is a valid NANP phone number you can use 
 ```csharp
 var checkValid = "12060991111".IsValidPhoneNumber();
 ```
@@ -42,9 +42,9 @@ or accept integers like
 var checkValid = PhoneNumbersNA.AreaCode.ValidPhoneNumber(int npa, int nxx, int xxxx);
 ```
   
-A common scenario when working with 3rd party VOIP API's like the [Teli API](https://apidocs.teleapi.net/api/) or the [Call48 API](https://apicontrol.call48.com/apidocs#did-did-lookup-get) is to query for blocks of available phone numbers by the NPA (Area Code) prefix for those phone numbers. This library provides a list of every active NANP Area Code as an array on integers that is accessible by calling ```PhoneNumbersNA.AreaCode.All```. If you want a list of only the active non-local, non-geographic area codes you can call ```PhoneNumbersNA.AreaCode.NonGeographic``` and similarly tollfree only Area Codes are available under ```PhoneNumbersNA.AreaCode.TollFree```. 
+A common scenario when working with 3rd party VOIP API's like the [Call48 API](https://apicontrol.call48.com/apidocs#did-did-lookup-get) is to query for blocks of available phone numbers by the NPA (Area Code) prefix for those phone numbers. This library provides a list of every active NANP Area Code as an array on integers that is accessible by calling ```PhoneNumbersNA.AreaCodes.All```. If you want a list of only the active non-local, non-geographic area codes you can call ```PhoneNumbersNA.AreaCodes.NonGeographic``` and similarly tollfree only Area Codes are available under ```PhoneNumbersNA.AreaCodes.TollFree```. 
   
-Some APIs require you to provide the name of the state the area code you are looking for existing within geographically. To that end you can use the ```PhoneNumbers.AreaCode.AreaCodesByState``` array to get a list of objects containing strings for both the short and long versions of state names and an array of all the area codes in that specific state.
+Some APIs require you to provide the name of the state the area code you are looking for existing within geographically. To that end you can use the ```PhoneNumbers.AreaCodes.AreaCodesByState``` array to get a list of objects containing strings for both the short and long versions of state names and an array of all the area codes in that specific state.
   
 Often phone number purchasing APIs make a distinction between Local phone numbers and Tollfree phone numbers. The PhoneNumber class contains a Type property that is accessible after you call the TryParse method on the string representation of a phone number. This Type property is an Enum with a value of Tollfree, NonGeographic, or Local depending on how the phone number was parsed. Using this information, you can chose the correct API endpoint to submit purchase order for that number to. If you prefer to figure out the Type of the number directly you can use the string extension methods 
 ```csharp
