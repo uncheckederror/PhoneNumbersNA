@@ -8,32 +8,20 @@ namespace PhoneNumbersNA
 {
     public static class Parse
     {
-        public static IEnumerable<PhoneNumber> AsPhoneNumbers(string str)
-        {
-            return AreaCode.ExtractPhoneNumbers(str.AsSpan());
-        }
-        public static IEnumerable<PhoneNumber> AsPhoneNumbers(ReadOnlySpan<char> str)
-        {
-            return AreaCode.ExtractPhoneNumbers(str);
-        }
-        public static IEnumerable<string> AsDialedNumbers(string str)
-        {
-            return AreaCode.ExtractDialedNumbers(str.AsSpan());
-        }
-        public static IEnumerable<string> AsDialedNumbers(ReadOnlySpan<char> str)
-        {
-            return AreaCode.ExtractDialedNumbers(str);
-        }
+        public static ReadOnlySpan<PhoneNumber> AsPhoneNumbers(string str) => AreaCode.ExtractPhoneNumbers(str.AsSpan());
+        public static ReadOnlySpan<PhoneNumber> AsPhoneNumbers(ReadOnlySpan<char> str) => AreaCode.ExtractPhoneNumbers(str);
+        public static ReadOnlySpan<string> AsDialedNumbers(string str) => AreaCode.ExtractDialedNumbers(str.AsSpan());
+        public static ReadOnlySpan<string> AsDialedNumbers(ReadOnlySpan<char> str) => AreaCode.ExtractDialedNumbers(str);
     }
 
-    public static class AreaCode
+    public readonly ref struct AreaCodes
     {
         /// <summary>
         /// All in service NANPA NPAs (Area Codes).
         /// https://nationalnanpa.com/enas/geoAreaCodeNumberReport.do
         /// </summary>
-        public static readonly int[] All = new int[]
-        {
+        public static readonly int[] All =
+        [
             201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 223, 224, 225, 226, 227, 228, 229, 231, 234, 235, 236, 239, 240, 242, 246, 248, 249, 250, 251, 252, 253, 254, 256, 260, 262, 263, 264, 267, 268, 269, 270, 272, 274, 276, 278, 279, 281, 283, 284, 289,
             301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 323, 324, 325, 326, 327, 329, 330, 331, 332, 334, 336, 337, 339, 340, 341, 343, 345, 346, 347, 350, 351, 352, 353, 354, 360, 361, 363, 364, 365, 367, 368, 369, 380, 381, 382, 385, 386, 387,
             401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 423, 424, 425, 428, 430, 431, 432, 434, 435, 436, 437, 438, 440, 441, 442, 443, 445, 447, 448, 450, 456, 458, 463, 464, 468, 469, 470, 472, 473, 474, 475, 478, 479, 480, 484,
@@ -42,36 +30,36 @@ namespace PhoneNumbersNA
             700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719, 720, 721, 724, 725, 726, 727, 728, 730, 731, 732, 734, 737, 740, 742, 743, 747, 753, 754, 757, 758, 760, 762, 763, 765, 767, 769, 770, 771, 772, 773, 774, 775, 778, 779, 780, 781, 782, 784, 785, 786, 787,
             800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 825, 826, 828, 829, 830, 831, 832, 833, 835, 838, 839, 840, 843, 844, 845, 847, 848, 849, 850, 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 872, 873, 876, 877, 878, 879, 888, 889,
             900, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 912, 913, 914, 915, 916, 917, 918, 919, 920, 925, 927, 928, 929, 930, 931, 934, 935, 936, 937, 938, 939, 940, 941, 943, 945, 947, 948, 949, 951, 952, 954, 956, 959, 970, 971, 972, 973, 975, 978, 979, 980, 983, 984, 985, 986, 989
-        };
+        ];
 
         /// <summary>
         /// All in service NANPA Tollfree NPAs (Area Codes).
         /// https://nationalnanpa.com/enas/nonGeoNpaServiceReport.do
         /// </summary>
-        public static readonly int[] TollFree = new int[]
-        {
+        public static readonly int[] TollFree =
+        [
             800, 833, 844, 855, 866, 877, 888
-        };
+        ];
 
         /// <summary>
         /// All in service NANPA Non-geographics NPAs (Area Codes) including tollfree numbers.
         /// https://nationalnanpa.com/enas/nonGeoNpaServiceReport.do
         /// </summary>
-        public static readonly int[] NonGeographic = new int[]
-        {
+        public static readonly int[] NonGeographic =
+        [
             500,  521,  522,  523,  524,  525,  526,  527,  528, 529,  533,  544,  566,  577,  588,
             600,  622, 633,
             700,  710,
             800,  833,  844,  855,  866,  877,  888,
             900
-        };
+        ];
 
         /// <summary>
         /// All in service NPAs maintained by the CNA ( Canadian Numbering Administrator ).
         /// https://cnac.ca/co_codes/co_code_lookup.htm
         /// </summary>
-        public static readonly int[] Canadian = new int[]
-        {
+        public static readonly int[] Canadian =
+        [
             204, 226, 236, 249, 250, 263, 289,
             306, 343, 354, 365, 367, 368, 382,
             403, 416, 418, 428, 431, 437, 438, 450, 468, 474,
@@ -80,14 +68,14 @@ namespace PhoneNumbersNA
             705, 709, 742, 753, 778, 780, 782,
             807, 819, 825, 867, 873, 879,
             902, 905
-        };
+        ];
 
         /// <summary>
         /// All in service NANPA Geographics NPAs (Area Codes) not directly in the United States or Canada. Includes sovereign nations and US territories.
         /// https://nationalnanpa.com/area_code_maps/area_code_maps_Country_Territory.html
         /// </summary>
-        public static readonly int[] CountryOrTerritory = new int[]
-        {
+        public static readonly int[] CountryOrTerritory =
+        [
             242, 246, 264, 268, 284,
             340, 345,
             441, 473,
@@ -95,8 +83,11 @@ namespace PhoneNumbersNA
             721, 758, 767, 784, 787,
             809, 829, 849, 868, 869, 876,
             939
-        };
+        ];
+    }
 
+    public static class AreaCode
+    {
         // Rather than directly looping over the area code arrays or storing them in a dictionary we can use a simple array of boolean as lookup.
         // Where the index of the array is the area code as an int and the boolean returned discribes if its valid or not.
         // Using the PhoneNumbersNA.Benchmark console app we verified that this flat lookup is faster than a simple loop or dictionary.
@@ -106,14 +97,14 @@ namespace PhoneNumbersNA
         public static readonly bool[] CanadianFlatLookup = CanadianFlat();
         public static readonly bool[] CountryOrTerritoryFlatLookup = CountryOrTerritoryFlat();
 
-        public static Dictionary<int, int> GetAsDictionary() => All.ToDictionary(x => x, y => y);
+        public static Dictionary<int, int> GetAsDictionary() => AreaCodes.All.ToDictionary(static x => x, static y => y);
 
         // Generator methods for the flat lookups.
         private static bool[] AllFlat()
         {
             bool[] array = new bool[999];
 
-            foreach (int code in All)
+            foreach (int code in AreaCodes.All)
             {
                 array[code] = true;
             }
@@ -124,7 +115,7 @@ namespace PhoneNumbersNA
         {
             bool[] array = new bool[999];
 
-            foreach (int code in TollFree)
+            foreach (int code in AreaCodes.TollFree)
             {
                 array[code] = true;
             }
@@ -135,7 +126,7 @@ namespace PhoneNumbersNA
         {
             bool[] array = new bool[999];
 
-            foreach (int code in NonGeographic)
+            foreach (int code in AreaCodes.NonGeographic)
             {
                 array[code] = true;
             }
@@ -146,7 +137,7 @@ namespace PhoneNumbersNA
         {
             bool[] array = new bool[999];
 
-            foreach (int code in Canadian)
+            foreach (int code in AreaCodes.Canadian)
             {
                 array[code] = true;
             }
@@ -157,485 +148,330 @@ namespace PhoneNumbersNA
         {
             bool[] array = new bool[999];
 
-            foreach (int code in CountryOrTerritory)
+            foreach (int code in AreaCodes.CountryOrTerritory)
             {
                 array[code] = true;
             }
             return array;
         }
 
-        public class AreaCodesByState
-        {
-            public string State { get; set; } = string.Empty;
-            public string StateShort { get; set; } = string.Empty;
-            public int[] AreaCodes { get; set; } = Array.Empty<int>();
-        }
+        public readonly record struct AreaCodesByState(ref readonly string State, ref readonly string StateShort, ref readonly int[] AreaCodes);
 
         /// <summary>
         /// NANPA AreaCodes by Location https://nationalnanpa.com/enas/geoAreaCodeNumberReport.do
         /// </summary>
-        public static readonly AreaCodesByState[] States = new AreaCodesByState[]
-        {
+        public static readonly AreaCodesByState[] States =
+        [
             new AreaCodesByState
             {
                 State = "Alabama",
                 StateShort = "AL",
-                AreaCodes = new int[]
-                {
-                    205, 251, 256, 334, 938
-                }
+                AreaCodes = [205, 251, 256, 334, 938]
             },
             new AreaCodesByState
             {
                 State = "Alaska",
                 StateShort = "AK",
-                AreaCodes = new int[]
-                {
-                    907
-                }
+                AreaCodes = [907]
             },
             new AreaCodesByState
             {
                 State = "Arizona",
                 StateShort = "AZ",
-                AreaCodes = new int[]
-                {
-                    480, 520, 602, 623, 928
-                }
+                AreaCodes = [480, 520, 602, 623, 928]
             },
             new AreaCodesByState
             {
                 State = "Arkansas",
                 StateShort = "AR",
-                AreaCodes = new int[]
-                {
-                    479, 501, 870
-                }
+                AreaCodes = [479, 501, 870]
             },
             new AreaCodesByState
             {
                 State = "California",
                 StateShort = "CA",
-                AreaCodes = new int[]
-                {
-                    209, 213, 279, 310, 323, 408, 415, 424, 442, 510, 530, 559, 562, 619, 626, 628, 650, 657, 661, 669, 707, 714, 747, 760, 805, 818, 820, 831, 858, 909, 916, 925, 949, 951
-                }
+                AreaCodes = [209, 213, 279, 310, 323, 408, 415, 424, 442, 510, 530, 559, 562, 619, 626, 628, 650, 657, 661, 669, 707, 714, 747, 760, 805, 818, 820, 831, 858, 909, 916, 925, 949, 951]
             },
             new AreaCodesByState
             {
                 State = "Colorado",
                 StateShort = "CO",
-                AreaCodes = new int[]
-                {
-                    303, 719, 720, 970
-                }
+                AreaCodes = [303, 719, 720, 970]
             },
             new AreaCodesByState
             {
                 State = "Connecticut",
                 StateShort = "CT",
-                AreaCodes = new int[]
-                {
-                    203, 475, 860, 959
-                }
+                AreaCodes = [203, 475, 860, 959]
             },
             new AreaCodesByState
             {
                 State = "Delaware",
                 StateShort = "DE",
-                AreaCodes = new int[]
-                {
-                    302
-                }
+                AreaCodes = [302]
             },
             new AreaCodesByState
             {
                 State = "Florida",
                 StateShort = "FL",
-                AreaCodes = new int[]
-                {
-                    239, 305, 321, 352, 386, 407, 561, 727, 754, 772, 786, 813, 850, 863, 904, 941, 954
-                }
+                AreaCodes = [239, 305, 321, 352, 386, 407, 561, 727, 754, 772, 786, 813, 850, 863, 904, 941, 954]
             },
             new AreaCodesByState
             {
                 State = "Georgia",
                 StateShort = "GA",
-                AreaCodes = new int[]
-                {
-                    229, 404, 470, 478, 678, 706, 762, 770, 912, 943
-                }
+                AreaCodes = [229, 404, 470, 478, 678, 706, 762, 770, 912, 943]
             },
             new AreaCodesByState
             {
                 State = "Hawaii",
                 StateShort = "HI",
-                AreaCodes = new int[]
-                {
-                   808
-                }
+                AreaCodes = [808]
             },
             new AreaCodesByState
             {
                 State = "Idaho",
                 StateShort = "ID",
-                AreaCodes = new int[]
-                {
-                   208, 986
-                }
+                AreaCodes = [208, 986]
             },
             new AreaCodesByState
             {
                 State = "Illinois",
                 StateShort = "IL",
-                AreaCodes = new int[]
-                {
-                   217, 224, 309, 312, 331, 618, 630, 708, 773, 779, 815, 847, 872
-                }
+                AreaCodes = [217, 224, 309, 312, 331, 618, 630, 708, 773, 779, 815, 847, 872]
             },
             new AreaCodesByState
             {
                 State = "Indiana",
                 StateShort = "IN",
-                AreaCodes = new int[]
-                {
-                   219, 260, 317, 463, 574, 765, 812, 930
-                }
+                AreaCodes = [219, 260, 317, 463, 574, 765, 812, 930]
             },
             new AreaCodesByState
             {
                 State = "Iowa",
                 StateShort = "IA",
-                AreaCodes = new int[]
-                {
-                   319, 515, 563, 641, 712
-                }
+                AreaCodes = [319, 515, 563, 641, 712]
             },
             new AreaCodesByState
             {
                 State = "Kansas",
                 StateShort = "KS",
-                AreaCodes = new int[]
-                {
-                    316, 620, 785, 913
-                }
+                AreaCodes = [316, 620, 785, 913]
             },
             new AreaCodesByState
             {
                 State = "Kentucky",
                 StateShort = "KY",
-                AreaCodes = new int[]
-                {
-                    270, 364, 502, 606, 859
-                }
+                AreaCodes = [270, 364, 502, 606, 859]
             },
             new AreaCodesByState
             {
                 State = "Louisiana",
                 StateShort = "LA",
-                AreaCodes = new int[]
-                {
-                    225, 318, 337, 504, 985
-                }
+                AreaCodes = [225, 318, 337, 504, 985]
             },
             new AreaCodesByState
             {
                 State = "Maine",
                 StateShort = "ME",
-                AreaCodes = new int[]
-                {
-                    207
-                }
+                AreaCodes = [207]
             },
             new AreaCodesByState
             {
                 State = "Maryland",
                 StateShort = "MD",
-                AreaCodes = new int[]
-                {
-                    240, 301, 410, 443, 667
-                }
+                AreaCodes = [240, 301, 410, 443, 667]
             },
             new AreaCodesByState
             {
                 State = "Massachusetts",
                 StateShort = "MA",
-                AreaCodes = new int[]
-                {
-                    339, 351, 413, 508, 617, 774, 781, 857, 978
-                }
+                AreaCodes = [339, 351, 413, 508, 617, 774, 781, 857, 978]
             },
             new AreaCodesByState
             {
                 State = "Michigan",
                 StateShort = "MI",
-                AreaCodes = new int[]
-                {
-                    231, 248, 269, 313, 517, 586, 616, 734, 810, 906, 947, 989
-                }
+                AreaCodes = [231, 248, 269, 313, 517, 586, 616, 734, 810, 906, 947, 989]
             },
             new AreaCodesByState
             {
                 State = "Minnesota",
                 StateShort = "MN",
-                AreaCodes = new int[]
-                {
-                    218, 320, 507, 612, 651, 763, 952
-                }
+                AreaCodes = [218, 320, 507, 612, 651, 763, 952]
             },
             new AreaCodesByState
             {
                 State = "Mississippi",
                 StateShort = "MS",
-                AreaCodes = new int[]
-                {
-                    228, 601, 662, 769
-                }
+                AreaCodes = [228, 601, 662, 769]
             },
             new AreaCodesByState
             {
                 State = "Missouri",
                 StateShort = "MO",
-                AreaCodes = new int[]
-                {
-                    314, 417, 573, 636, 660, 816
-                }
+                AreaCodes = [314, 417, 573, 636, 660, 816]
             },
             new AreaCodesByState
             {
                 State = "Montana",
                 StateShort = "MT",
-                AreaCodes = new int[]
-                {
-                    406
-                }
+                AreaCodes = [406]
             },
             new AreaCodesByState
             {
                 State = "Nebraska",
                 StateShort = "NE",
-                AreaCodes = new int[]
-                {
-                    308, 402, 531
-                }
+                AreaCodes = [308, 402, 531]
             },
             new AreaCodesByState
             {
                 State = "Nevada",
                 StateShort = "NV",
-                AreaCodes = new int[]
-                {
-                    702, 725, 775
-                }
+                AreaCodes = [702, 725, 775]
             },
             new AreaCodesByState
             {
                 State = "New Hampshire",
                 StateShort = "NH",
-                AreaCodes = new int[]
-                {
-                    603
-                }
+                AreaCodes = [603]
             },
             new AreaCodesByState
             {
                 State = "New Jersey",
                 StateShort = "NJ",
-                AreaCodes = new int[]
-                {
-                    201, 551, 609, 640, 732, 848, 856, 862, 908, 973
-                }
+                AreaCodes = [201, 551, 609, 640, 732, 848, 856, 862, 908, 973]
             },
             new AreaCodesByState
             {
                 State = "New Mexico",
                 StateShort = "NM",
-                AreaCodes = new int[]
-                {
-                    505, 575
-                }
+                AreaCodes = [505, 575]
             },
             new AreaCodesByState
             {
                 State = "New York",
                 StateShort = "NY",
-                AreaCodes = new int[]
-                {
-                    212, 315, 332, 347, 516, 518, 585, 607, 631, 646, 680, 716, 718, 838, 845, 914, 917, 929, 934
-                }
+                AreaCodes = [212, 315, 332, 347, 516, 518, 585, 607, 631, 646, 680, 716, 718, 838, 845, 914, 917, 929, 934]
             },
             new AreaCodesByState
             {
                 State = "North Carolina",
                 StateShort = "NC",
-                AreaCodes = new int[]
-                {
-                    252, 336, 704, 743, 828, 910, 919, 980, 984
-                }
+                AreaCodes = [252, 336, 704, 743, 828, 910, 919, 980, 984]
             },
             new AreaCodesByState
             {
                 State = "Ohio",
                 StateShort = "OH",
-                AreaCodes = new int[]
-                {
-                    216, 220, 234, 330, 380, 419, 440, 513, 567, 614, 740, 937
-                }
+                AreaCodes = [216, 220, 234, 330, 380, 419, 440, 513, 567, 614, 740, 937]
             },
             new AreaCodesByState
             {
                 State = "Oklahoma",
                 StateShort = "OK",
-                AreaCodes = new int[]
-                {
-                    405, 539, 580, 918
-                }
+                AreaCodes = [405, 539, 580, 918]
             },
             new AreaCodesByState
             {
                 State = "Oregon",
                 StateShort = "OR",
-                AreaCodes = new int[]
-                {
-                    458, 503, 541, 971
-                }
+                AreaCodes = [458, 503, 541, 971]
             },
             new AreaCodesByState
             {
                 State = "Pennsylvania",
                 StateShort = "PA",
-                AreaCodes = new int[]
-                {
-                    215, 223, 267, 272, 412, 445, 484, 570, 610, 717, 724, 814, 878
-                }
+                AreaCodes = [215, 223, 267, 272, 412, 445, 484, 570, 610, 717, 724, 814, 878]
             },
             new AreaCodesByState
             {
                 State = "Rhode Island",
                 StateShort = "RI",
-                AreaCodes = new int[]
-                {
-                    401
-                }
+                AreaCodes = [401]
             },
             new AreaCodesByState
             {
                 State = "South Carolina",
                 StateShort = "SC",
-                AreaCodes = new int[]
-                {
-                    803, 843, 854, 864
-                }
+                AreaCodes = [803, 843, 854, 864]
             },
             new AreaCodesByState
             {
                 State = "South Dakota",
                 StateShort = "SD",
-                AreaCodes = new int[]
-                {
-                    605
-                }
+                AreaCodes = [605]
             },
             new AreaCodesByState
             {
                 State = "Tennessee",
                 StateShort = "TN",
-                AreaCodes = new int[]
-                {
-                    423, 615, 629, 731, 865, 901, 931
-                }
+                AreaCodes = [423, 615, 629, 731, 865, 901, 931]
             },
             new AreaCodesByState
             {
                 State = "Texas",
                 StateShort = "TX",
-                AreaCodes = new int[]
-                {
-                    210, 214, 254, 281, 325, 346, 361, 409, 430, 432, 469, 512, 682, 713, 726, 737, 806, 817, 830, 832, 903, 915, 936, 940, 956, 972, 979
-                }
+                AreaCodes = [210, 214, 254, 281, 325, 346, 361, 409, 430, 432, 469, 512, 682, 713, 726, 737, 806, 817, 830, 832, 903, 915, 936, 940, 956, 972, 979]
             },
             new AreaCodesByState
             {
                 State = "Utah",
                 StateShort = "UT",
-                AreaCodes = new int[]
-                {
-                    385, 435, 801
-                }
+                AreaCodes = [385, 435, 801]
             },
             new AreaCodesByState
             {
                 State = "Vermont",
                 StateShort = "VT",
-                AreaCodes = new int[]
-                {
-                    802
-                }
+                AreaCodes = [802]
             },
             new AreaCodesByState
             {
                 State = "Virginia",
                 StateShort = "VA",
-                AreaCodes = new int[]
-                {
-                    276, 434, 540, 571, 703, 757, 804
-                }
+                AreaCodes = [276, 434, 540, 571, 703, 757, 804]
             },
             new AreaCodesByState
             {
                 State = "Washington",
                 StateShort = "WA",
-                AreaCodes = new int[]
-                {
-                    206, 253, 360, 425, 509, 564
-                }
+                AreaCodes = [206, 253, 360, 425, 509, 564]
             },
             new AreaCodesByState
             {
                 State = "Washington, DC",
                 StateShort = "DC",
-                AreaCodes = new int[]
-                {
-                    202
-                }
+                AreaCodes = [202]
             },
             new AreaCodesByState
             {
                 State = "West Virginia",
                 StateShort = "WV",
-                AreaCodes = new int[]
-                {
-                    304, 681
-                }
+                AreaCodes = [304, 681]
             },
             new AreaCodesByState
             {
                 State = "Wisconsin",
                 StateShort = "WI",
-                AreaCodes = new int[]
-                {
-                    262, 414, 534, 608, 715, 920
-                }
+                AreaCodes = [262, 414, 534, 608, 715, 920]
             },
             new AreaCodesByState
             {
                 State = "Wyoming",
                 StateShort = "WY",
-                AreaCodes = new int[]
-                {
-                    307
-                }
+                AreaCodes = [307]
             }
-        };
+        ];
 
         /// <summary>
         /// Check if an NPA (Area Code) is in service and in Canada.
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidCanadian(int npa)
+        public static ref readonly bool ValidCanadian(ref int npa)
         {
-            return CanadianFlatLookup[npa];
+            return ref CanadianFlatLookup[npa];
         }
 
         /// <summary>
@@ -651,7 +487,7 @@ namespace PhoneNumbersNA
 
                 if (checkParse)
                 {
-                    return ValidCanadian(canadian);
+                    return ValidCanadian(ref canadian);
                 }
             }
             return false;
@@ -662,7 +498,7 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidCanadian(ReadOnlySpan<char> npa)
+        public static bool ValidCanadian(ref ReadOnlySpan<char> npa)
         {
             if (npa.Length is 3)
             {
@@ -670,7 +506,7 @@ namespace PhoneNumbersNA
 
                 if (checkParse)
                 {
-                    return ValidCanadian(canadian);
+                    return ValidCanadian(ref canadian);
                 }
             }
             return false;
@@ -687,10 +523,11 @@ namespace PhoneNumbersNA
 
             if (!string.IsNullOrWhiteSpace(str))
             {
+                ReadOnlySpan<char> valid = number[..3];
                 return str.Length switch
                 {
-                    10 => ValidCanadian(number[..3]),
-                    _ => ValidCanadian(number),
+                    10 => ValidCanadian(ref valid),
+                    _ => false,
                 };
             }
             return false;
@@ -701,7 +538,7 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidCountryOrTerritory(int npa)
+        public static bool ValidCountryOrTerritory(ref int npa)
         {
             return CountryOrTerritoryFlatLookup[npa];
         }
@@ -719,7 +556,7 @@ namespace PhoneNumbersNA
 
                 if (checkParse)
                 {
-                    return ValidCountryOrTerritory(country);
+                    return ValidCountryOrTerritory(ref country);
                 }
             }
             return false;
@@ -730,7 +567,7 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidCountryOrTerritory(ReadOnlySpan<char> npa)
+        public static bool ValidCountryOrTerritory(ref ReadOnlySpan<char> npa)
         {
             if (npa.Length is 3)
             {
@@ -738,7 +575,7 @@ namespace PhoneNumbersNA
 
                 if (checkParse)
                 {
-                    return ValidCountryOrTerritory(country);
+                    return ValidCountryOrTerritory(ref country);
                 }
             }
             return false;
@@ -755,10 +592,11 @@ namespace PhoneNumbersNA
 
             if (!string.IsNullOrWhiteSpace(str))
             {
+                ReadOnlySpan<char> valid = number[..3];
                 return str.Length switch
                 {
-                    10 => ValidCountryOrTerritory(number[..3]),
-                    _ => ValidCountryOrTerritory(number),
+                    10 => ValidCountryOrTerritory(ref valid),
+                    _ => ValidCountryOrTerritory(ref number),
                 };
             }
             return false;
@@ -769,9 +607,14 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidNonGeographic(int npa)
+        public static bool ValidNonGeographic(ref int npa)
         {
             return NonGeographicFlatLookup[npa];
+        }
+
+        public static bool ValidNonGeographic(int npa)
+        {
+            return ValidNonGeographic(ref npa);
         }
 
         /// <summary>
@@ -787,7 +630,7 @@ namespace PhoneNumbersNA
 
                 if (checkParse)
                 {
-                    return ValidNonGeographic(nongeo);
+                    return ValidNonGeographic(ref nongeo);
                 }
             }
             return false;
@@ -798,7 +641,7 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidNonGeographic(ReadOnlySpan<char> npa)
+        public static bool ValidNonGeographic(ref ReadOnlySpan<char> npa)
         {
             if (npa.Length is 3)
             {
@@ -806,7 +649,7 @@ namespace PhoneNumbersNA
 
                 if (checkParse)
                 {
-                    return ValidNonGeographic(nongeo);
+                    return ValidNonGeographic(ref nongeo);
                 }
             }
             return false;
@@ -823,10 +666,11 @@ namespace PhoneNumbersNA
 
             if (!string.IsNullOrWhiteSpace(str))
             {
+                ReadOnlySpan<char> valid = number[..3];
                 return str.Length switch
                 {
-                    10 => ValidNonGeographic(number[..3]),
-                    _ => ValidNonGeographic(number),
+                    10 => ValidNonGeographic(ref valid),
+                    _ => ValidNonGeographic(ref number),
                 };
             }
             return false;
@@ -837,23 +681,14 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidTollfree(int npa)
+        public static bool ValidTollfree(ref int npa)
         {
             return TollFreeFlatLookup[npa];
         }
 
-        /// <summary>
-        /// Check if a string is an NPA (Area Code), is in service, and Tollfree.
-        /// </summary>
-        /// <param name="npa"></param>
-        /// <returns></returns>
-        public static bool ValidTollfree(string npa)
+        public static bool ValidTollfree(int npa)
         {
-            if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
-            {
-                return ValidTollfree(npa.AsSpan());
-            }
-            return false;
+            return ValidTollfree(ref npa);
         }
 
         /// <summary>
@@ -861,7 +696,27 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidTollfree(ReadOnlySpan<char> npa)
+        public static bool ValidTollfree(ref string npa)
+        {
+            if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
+            {
+                ReadOnlySpan<char> valid = npa.AsSpan();
+                return ValidTollfree(ref valid);
+            }
+            return false;
+        }
+
+        public static bool ValidTollfree(string npa)
+        {
+            return ValidTollfree(ref npa);
+        }
+
+        /// <summary>
+        /// Check if a string is an NPA (Area Code), is in service, and Tollfree.
+        /// </summary>
+        /// <param name="npa"></param>
+        /// <returns></returns>
+        public static bool ValidTollfree(ref ReadOnlySpan<char> npa)
         {
             if (npa.Length is 3)
             {
@@ -869,7 +724,7 @@ namespace PhoneNumbersNA
 
                 if (checkParse)
                 {
-                    return ValidTollfree(toll);
+                    return ValidTollfree(ref toll);
                 }
             }
             return false;
@@ -886,10 +741,11 @@ namespace PhoneNumbersNA
 
             if (!string.IsNullOrWhiteSpace(str))
             {
+                ReadOnlySpan<char> valid = number[..3];
                 return str.Length switch
                 {
-                    10 => ValidTollfree(number[..3]),
-                    _ => ValidTollfree(number),
+                    10 => ValidTollfree(ref valid),
+                    _ => ValidTollfree(ref number),
                 };
             }
             return false;
@@ -901,9 +757,14 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="nxx"></param>
         /// <returns></returns>
-        public static bool ValidNPA(int npa)
+        public static bool ValidNPA(ref int npa)
         {
             return AllFlatLookup[npa];
+        }
+
+        public static bool ValidNPA(int npa)
+        {
+            return ValidNPA(ref npa);
         }
 
         /// <summary>
@@ -911,17 +772,22 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="npa"></param>
         /// <returns></returns>
-        public static bool ValidNPA(string npa)
+        public static bool ValidNPA(ref string npa)
         {
             if (!string.IsNullOrWhiteSpace(npa) && npa.Length is 3)
             {
                 bool checkParse = int.TryParse(npa.AsSpan(), out int code);
                 if (checkParse)
                 {
-                    return ValidNPA(code);
+                    return ValidNPA(ref code);
                 }
             }
             return false;
+        }
+
+        public static bool ValidNPA(string npa)
+        {
+            return ValidNPA(ref npa);
         }
 
         /// <summary>
@@ -940,7 +806,7 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="nxx"></param>
         /// <returns></returns>
-        public static bool ValidNXX(int nxx)
+        public static bool ValidNXX(ref int nxx)
         {
             if (nxx >= 200 && nxx <= 999)
             {
@@ -949,22 +815,32 @@ namespace PhoneNumbersNA
             return false;
         }
 
+        public static bool ValidNXX(int nxx)
+        {
+            return ValidNXX(ref nxx);
+        }
+
         /// <summary>
         /// Validate a string-ly typed 3 digit nxx sequence in the format of "NXX".
         /// </summary>
         /// <param name="nxx"></param>
         /// <returns></returns>
-        public static bool ValidNXX(string nxx)
+        public static bool ValidNXX(ref string nxx)
         {
             if (!string.IsNullOrWhiteSpace(nxx) && nxx.Length is 3)
             {
                 bool checkParse = int.TryParse(nxx.AsSpan(), out int office);
                 if (checkParse)
                 {
-                    return ValidNXX(office);
+                    return ValidNXX(ref office);
                 }
             }
             return false;
+        }
+
+        public static bool ValidNXX(string nxx)
+        {
+            return ValidNXX(ref nxx);
         }
 
         /// <summary>
@@ -974,7 +850,7 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool IsValidNXX(this string str)
         {
-            return ValidNXX(str);
+            return ValidNXX(ref str);
         }
 
         /// <summary>
@@ -982,7 +858,7 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="xxxx"></param>
         /// <returns></returns>
-        public static bool ValidXXXX(int xxxx)
+        public static bool ValidXXXX(ref int xxxx)
         {
             if (xxxx >= 0 && xxxx <= 9999)
             {
@@ -991,22 +867,32 @@ namespace PhoneNumbersNA
             return false;
         }
 
+        public static bool ValidXXXX(int xxxx)
+        {
+            return ValidXXXX(ref xxxx);
+        }
+
         /// <summary>
         /// Validate a string-ly typed 4 digit vanity sequence in the format of "XXXX".
         /// </summary>
         /// <param name="xxxx"></param>
         /// <returns></returns>
-        public static bool ValidXXXX(string xxxx)
+        public static bool ValidXXXX(ref string xxxx)
         {
             if (!string.IsNullOrWhiteSpace(xxxx) && xxxx.Length is 4)
             {
                 bool checkParse = int.TryParse(xxxx.AsSpan(), out int vanity);
                 if (checkParse)
                 {
-                    return ValidXXXX(vanity);
+                    return ValidXXXX(ref vanity);
                 }
             }
             return false;
+        }
+
+        public static bool ValidXXXX(string xxxx)
+        {
+            return ValidXXXX(ref xxxx);
         }
 
         /// <summary>
@@ -1016,7 +902,7 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public static bool IsValidXXXX(this string str)
         {
-            return ValidXXXX(str);
+            return ValidXXXX(ref str);
         }
 
         /// <summary>
@@ -1026,9 +912,14 @@ namespace PhoneNumbersNA
         /// <param name="nxx"></param>
         /// <param name="xxxx"></param>
         /// <returns></returns>
+        public static bool ValidPhoneNumber(ref int npa, ref int nxx, ref int xxxx)
+        {
+            return ValidNPA(ref npa) && ValidNXX(ref nxx) && ValidXXXX(ref xxxx);
+        }
+
         public static bool ValidPhoneNumber(int npa, int nxx, int xxxx)
         {
-            return ValidNPA(npa) && ValidNXX(nxx) && ValidXXXX(xxxx);
+            return ValidPhoneNumber(ref npa, ref nxx, ref xxxx);
         }
 
         /// <summary>
@@ -1060,7 +951,7 @@ namespace PhoneNumbersNA
 
                 if (checkNpa && checkNxx && checkXxxx)
                 {
-                    return ValidPhoneNumber(npa, nxx, xxxx);
+                    return ValidPhoneNumber(ref npa, ref nxx, ref xxxx);
                 }
             }
             return false;
@@ -1093,7 +984,7 @@ namespace PhoneNumbersNA
             foreach (char letter in input)
             {
                 // Allow digits, drop leading 1's as NANPA area codes start at 201.
-                if (char.IsDigit(letter) && (letter is not '1' || converted.Any()))
+                if (char.IsDigit(letter) && (letter is not '1' || converted.Count != 0))
                 {
                     converted.Add(letter);
                 }
@@ -1113,14 +1004,14 @@ namespace PhoneNumbersNA
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static IEnumerable<string> ExtractDialedNumbers(this string str)
+        public static ReadOnlySpan<string> ExtractDialedNumbers(this string str)
         {
             return ExtractDialedNumbers(str.AsSpan());
         }
 
-        public static IEnumerable<string> ExtractDialedNumbers(ReadOnlySpan<char> str)
+        public static ReadOnlySpan<string> ExtractDialedNumbers(ReadOnlySpan<char> str)
         {
-            List<string> parsedNumbers = new();
+            List<string> parsedNumbers = [];
 
             if (!str.IsEmpty)
             {
@@ -1129,7 +1020,7 @@ namespace PhoneNumbersNA
                 foreach (char letter in str)
                 {
                     // Allow digits, drop leading 1's as NANPA area codes start at 201.
-                    if (char.IsDigit(letter) && (letter is not '1' || converted.Any()))
+                    if (char.IsDigit(letter) && (letter is not '1' || converted.Count != 0))
                     {
                         converted.Add(letter);
                     }
@@ -1145,17 +1036,17 @@ namespace PhoneNumbersNA
                 }
             }
 
-            return parsedNumbers;
+            return CollectionsMarshal.AsSpan(parsedNumbers);
         }
 
-        public static IEnumerable<PhoneNumber> ExtractPhoneNumbers(this string str)
+        public static ReadOnlySpan<PhoneNumber> ExtractPhoneNumbers(this string str)
         {
             return ExtractPhoneNumbers(str.AsSpan());
         }
 
-        public static IEnumerable<PhoneNumber> ExtractPhoneNumbers(this ReadOnlySpan<char> str)
+        public static ReadOnlySpan<PhoneNumber> ExtractPhoneNumbers(this ReadOnlySpan<char> str)
         {
-            List<PhoneNumber> parsedNumbers = new();
+            List<PhoneNumber> parsedNumbers = [];
 
             if (!str.IsEmpty)
             {
@@ -1164,7 +1055,7 @@ namespace PhoneNumbersNA
                 foreach (char letter in str)
                 {
                     // Allow digits, drop leading 1's as NANPA area codes start at 201.
-                    if (char.IsDigit(letter) && (letter is not '1' || converted.Any()))
+                    if (char.IsDigit(letter) && (letter is not '1' || converted.Count != 0))
                     {
                         converted.Add(letter);
                     }
@@ -1184,7 +1075,7 @@ namespace PhoneNumbersNA
                 }
             }
 
-            return parsedNumbers;
+            return CollectionsMarshal.AsSpan(parsedNumbers);
         }
     }
 
@@ -1196,29 +1087,22 @@ namespace PhoneNumbersNA
         NonGeographic,
         CountryOrTerritory,
         Canada,
-        ShortCode
+        ShortCode,
+        Invalid
     }
 
     /// <summary>
     /// A strongly typed representation of a NANPA phone number.
     /// </summary>
-    public class PhoneNumber
+    public readonly record struct PhoneNumber(ref readonly string DialedNumber, ref readonly int NPA, ref readonly int NXX, ref readonly int XXXX, ref readonly NumberType Type)
     {
-        public string DialedNumber { get; set; } = string.Empty;
-        public int NPA { get; set; }
-        public int NXX { get; set; }
-        public int XXXX { get; set; }
-        public NumberType Type { get; set; }
-        public DateTime DateIngested { get; set; }
-        public string IngestedFrom { get; set; } = string.Empty;
-
         /// <summary>
         /// Parse a string into a strongly typed NANPA phone number.
         /// </summary>
         /// <param name="input"></param>
         /// <param name="number"></param>
         /// <returns></returns>
-        public static bool TryParse(string input, out PhoneNumber number)
+        public static bool TryParse(in string input, out PhoneNumber number)
         {
             // Fail fast
             if (input.Length < 10 || string.IsNullOrWhiteSpace(input))
@@ -1234,7 +1118,12 @@ namespace PhoneNumbersNA
                         return true;
                     }
                 }
-                number = new();
+                int emptyNPA = 0;
+                int emptyNXX = 0;
+                int emptyXXXX = 0;
+                NumberType invalid = NumberType.Invalid;
+                string dialed = string.Empty;
+                number = new(ref dialed, ref emptyNPA, ref emptyNXX, ref emptyXXXX, ref invalid);
                 return false;
             }
 
@@ -1246,7 +1135,12 @@ namespace PhoneNumbersNA
             }
             else
             {
-                number = new();
+                int emptyNPA = 0;
+                int emptyNXX = 0;
+                int emptyXXXX = 0;
+                NumberType invalid = NumberType.Invalid;
+                string dialed = string.Empty;
+                number = new(ref dialed, ref emptyNPA, ref emptyNXX, ref emptyXXXX, ref invalid);
                 return false;
             }
         }
@@ -1257,12 +1151,17 @@ namespace PhoneNumbersNA
         /// <param name="input"></param>
         /// <param name="number"></param>
         /// <returns>True if a valid phone number was parsed and false if not.</returns>
-        public static bool TryParse(ReadOnlySpan<char> input, out PhoneNumber number)
+        public static bool TryParse(in ReadOnlySpan<char> input, out PhoneNumber number)
         {
             // Fail fast
             if (input.IsEmpty || input.Length < 10)
             {
-                number = new();
+                int emptyNPA = 0;
+                int emptyNXX = 0;
+                int emptyXXXX = 0;
+                NumberType invalid = NumberType.Invalid;
+                string dialed = string.Empty;
+                number = new(ref dialed, ref emptyNPA, ref emptyNXX, ref emptyXXXX, ref invalid);
                 return false;
             }
 
@@ -1271,7 +1170,7 @@ namespace PhoneNumbersNA
             foreach (char letter in input)
             {
                 // Allow digits, drop leading 1's as NANPA area codes start at 201.
-                if (char.IsDigit(letter) && (letter is not '1' || converted.Any()))
+                if (char.IsDigit(letter) && (letter is not '1' || converted.Count != 0))
                 {
                     converted.Add(letter);
                 }
@@ -1286,86 +1185,66 @@ namespace PhoneNumbersNA
             // This input can't be parsed, so bail out.
             if (converted.Count is not 10)
             {
-                number = new();
+                int emptyNPA = 0;
+                int emptyNXX = 0;
+                int emptyXXXX = 0;
+                NumberType invalid = NumberType.Invalid;
+                string dialed = string.Empty;
+                number = new(ref dialed, ref emptyNPA, ref emptyNXX, ref emptyXXXX, ref invalid);
                 return false;
             }
 
-            Span<char> cleanedQuery = CollectionsMarshal.AsSpan(converted);
+            ReadOnlySpan<char> cleanedQuery = CollectionsMarshal.AsSpan(converted);
 
             bool checkNpa = int.TryParse(cleanedQuery[..3], out int npa);
             bool checkNxx = int.TryParse(cleanedQuery.Slice(3, 3), out int nxx);
             bool checkXxxx = int.TryParse(cleanedQuery.Slice(6, 4), out int xxxx);
 
-            bool checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
+            bool checkValid = AreaCode.ValidPhoneNumber(ref npa, ref nxx, ref xxxx);
 
             if (checkNpa && checkNxx && checkXxxx && checkValid)
             {
-                if (AreaCode.ValidTollfree(npa))
+                if (AreaCode.ValidTollfree(ref npa))
                 {
-                    number = new PhoneNumber
-                    {
-                        DialedNumber = cleanedQuery.ToString(),
-                        NPA = npa,
-                        NXX = nxx,
-                        XXXX = xxxx,
-                        Type = NumberType.Tollfree,
-                        DateIngested = DateTime.Now
-                    };
+                    string dialed = cleanedQuery.ToString();
+                    NumberType type = NumberType.Tollfree;
+                    number = new PhoneNumber(ref dialed, ref npa, ref nxx, ref xxxx, ref type);
                 }
-                else if (AreaCode.ValidNonGeographic(npa))
+                else if (AreaCode.ValidNonGeographic(ref npa))
                 {
-                    number = new PhoneNumber
-                    {
-                        DialedNumber = cleanedQuery.ToString(),
-                        NPA = npa,
-                        NXX = nxx,
-                        XXXX = xxxx,
-                        Type = NumberType.NonGeographic,
-                        DateIngested = DateTime.Now
-                    };
+                    string dialed = cleanedQuery.ToString();
+                    NumberType type = NumberType.NonGeographic;
+                    number = new PhoneNumber(ref dialed, ref npa, ref nxx, ref xxxx, ref type);
                 }
-                else if (AreaCode.ValidCanadian(npa))
+                else if (AreaCode.ValidCanadian(ref npa))
                 {
-                    number = new PhoneNumber
-                    {
-                        DialedNumber = cleanedQuery.ToString(),
-                        NPA = npa,
-                        NXX = nxx,
-                        XXXX = xxxx,
-                        Type = NumberType.Canada,
-                        DateIngested = DateTime.Now
-                    };
+                    string dialed = cleanedQuery.ToString();
+                    NumberType type = NumberType.Canada;
+                    number = new PhoneNumber(ref dialed, ref npa, ref nxx, ref xxxx, ref type);
                 }
-                else if (AreaCode.ValidCountryOrTerritory(npa))
+                else if (AreaCode.ValidCountryOrTerritory(ref npa))
                 {
-                    number = new PhoneNumber
-                    {
-                        DialedNumber = cleanedQuery.ToString(),
-                        NPA = npa,
-                        NXX = nxx,
-                        XXXX = xxxx,
-                        Type = NumberType.CountryOrTerritory,
-                        DateIngested = DateTime.Now
-                    };
+                    string dialed = cleanedQuery.ToString();
+                    NumberType type = NumberType.CountryOrTerritory;
+                    number = new PhoneNumber(ref dialed, ref npa, ref nxx, ref xxxx, ref type);
                 }
                 else
                 {
-                    number = new PhoneNumber
-                    {
-                        DialedNumber = cleanedQuery.ToString(),
-                        NPA = npa,
-                        NXX = nxx,
-                        XXXX = xxxx,
-                        Type = NumberType.Local,
-                        DateIngested = DateTime.Now
-                    };
+                    string dialed = cleanedQuery.ToString();
+                    NumberType type = NumberType.CountryOrTerritory;
+                    number = new PhoneNumber(ref dialed, ref npa, ref nxx, ref xxxx, ref type);
                 }
 
                 return true;
             }
             else
             {
-                number = new();
+                int emptyNPA = 0;
+                int emptyNXX = 0;
+                int emptyXXXX = 0;
+                NumberType invalid = NumberType.Invalid;
+                string dialed = string.Empty;
+                number = new(ref dialed, ref emptyNPA, ref emptyNXX, ref emptyXXXX, ref invalid);
                 return false;
             }
         }
@@ -1382,11 +1261,11 @@ namespace PhoneNumbersNA
             bool checkNxx = int.TryParse(input.Slice(3, 3), out int nxx);
             bool checkXxxx = int.TryParse(input.Slice(6, 4), out int xxxx);
 
-            bool checkValid = AreaCode.ValidPhoneNumber(npa, nxx, xxxx);
+            bool checkValid = AreaCode.ValidPhoneNumber(ref npa, ref nxx, ref xxxx);
 
             if (checkNpa && checkNxx && checkXxxx && checkValid)
             {
-                if (AreaCode.ValidTollfree(npa))
+                if (AreaCode.ValidTollfree(ref npa))
                 {
                     number = new PhoneNumber
                     {
@@ -1395,10 +1274,9 @@ namespace PhoneNumbersNA
                         NXX = nxx,
                         XXXX = xxxx,
                         Type = NumberType.Tollfree,
-                        DateIngested = DateTime.Now
                     };
                 }
-                else if (AreaCode.ValidNonGeographic(npa))
+                else if (AreaCode.ValidNonGeographic(ref npa))
                 {
                     number = new PhoneNumber
                     {
@@ -1407,10 +1285,9 @@ namespace PhoneNumbersNA
                         NXX = nxx,
                         XXXX = xxxx,
                         Type = NumberType.NonGeographic,
-                        DateIngested = DateTime.Now
                     };
                 }
-                else if (AreaCode.ValidCanadian(npa))
+                else if (AreaCode.ValidCanadian(ref npa))
                 {
                     number = new PhoneNumber
                     {
@@ -1419,10 +1296,9 @@ namespace PhoneNumbersNA
                         NXX = nxx,
                         XXXX = xxxx,
                         Type = NumberType.Canada,
-                        DateIngested = DateTime.Now
                     };
                 }
-                else if (AreaCode.ValidCountryOrTerritory(npa))
+                else if (AreaCode.ValidCountryOrTerritory(ref npa))
                 {
                     number = new PhoneNumber
                     {
@@ -1431,7 +1307,6 @@ namespace PhoneNumbersNA
                         NXX = nxx,
                         XXXX = xxxx,
                         Type = NumberType.CountryOrTerritory,
-                        DateIngested = DateTime.Now
                     };
                 }
                 else
@@ -1443,7 +1318,6 @@ namespace PhoneNumbersNA
                         NXX = nxx,
                         XXXX = xxxx,
                         Type = NumberType.Local,
-                        DateIngested = DateTime.Now
                     };
                 }
 
@@ -1462,7 +1336,7 @@ namespace PhoneNumbersNA
         /// <param name="input"></param>
         /// <param name="number"></param>
         /// <returns></returns>
-        public static bool TryParseShortCode(ReadOnlySpan<char> input, out PhoneNumber number)
+        public static bool TryParseShortCode(in ReadOnlySpan<char> input, out PhoneNumber number)
         {
             // Fail fast
             if (input.IsEmpty || input.Length < 5)
@@ -1477,7 +1351,7 @@ namespace PhoneNumbersNA
             {
                 // Allow digits.
                 // Short codes cannot start with a 1 or a 0.
-                if (char.IsDigit(letter) && (letter is not '1' || converted.Any()) && (letter is not '0' || converted.Any()))
+                if (char.IsDigit(letter) && (letter is not '1' || converted.Count != 0) && (letter is not '0' || converted.Count != 0))
                 {
                     converted.Add(letter);
                 }
@@ -1492,12 +1366,11 @@ namespace PhoneNumbersNA
             // This input can't be parsed, so bail out.
             if (converted.Count is 5 || converted.Count is 6)
             {
-                Span<char> cleanedQuery = CollectionsMarshal.AsSpan(converted);
+                ReadOnlySpan<char> cleanedQuery = CollectionsMarshal.AsSpan(converted);
                 number = new()
                 {
                     DialedNumber = cleanedQuery.ToString(),
                     Type = NumberType.ShortCode,
-                    DateIngested = DateTime.Now,
                 };
                 return true;
             }
@@ -1556,9 +1429,11 @@ namespace PhoneNumbersNA
         /// <returns></returns>
         public Uri GetAsURI()
         {
-            UriBuilder builder = new UriBuilder();
-            builder.Scheme = "tel";
-            builder.Path = $"+1-{GetNPAAsString()}-{GetNXXAsString()}-{GetXXXXAsString()}";
+            UriBuilder builder = new()
+            {
+                Scheme = "tel",
+                Path = $"+1-{GetNPAAsString()}-{GetNXXAsString()}-{GetXXXXAsString()}"
+            };
             return builder.Uri;
         }
 
@@ -1566,7 +1441,10 @@ namespace PhoneNumbersNA
         /// Verifies that the phone number is valid.
         /// </summary>
         /// <returns>True if valid, false if invalid.</returns>
-        public bool IsValid() => DialedNumber.IsValidPhoneNumber() && AreaCode.ValidNPA(NPA) && AreaCode.ValidNXX(NXX) && AreaCode.ValidXXXX(XXXX);
+        public bool IsValid()
+        {
+            return DialedNumber.IsValidPhoneNumber() && AreaCode.ValidNPA(NPA) && AreaCode.ValidNXX(NXX) && AreaCode.ValidXXXX(XXXX);
+        }
 
         /// <summary>
         /// A string representation of the Phone Number object.
