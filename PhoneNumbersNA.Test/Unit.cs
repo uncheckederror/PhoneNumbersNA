@@ -357,7 +357,7 @@ namespace PhoneNumbersNA.Test
 
         // Disabled because NANPA removed this report from their website.
         [Fact]
-        public async void VerifyNonGeographicCodesFromNANPA()
+        public void VerifyNonGeographicCodesFromNANPA()
         {
             string path = "./NonGeographic.csv";
 
@@ -386,7 +386,7 @@ namespace PhoneNumbersNA.Test
 
         // Disabled because NANPA removed this report from their website.
         [Fact]
-        public async void VerifyTollfreeCodesFromNANPA()
+        public void VerifyTollfreeCodesFromNANPA()
         {
             string path = "./All.csv";
 
@@ -421,7 +421,7 @@ namespace PhoneNumbersNA.Test
 
         // Disabled because NANPA removed this report from their website.
         [Fact]
-        public async void VerifyAllAreaCodesFromNANPA()
+        public void VerifyAllAreaCodesFromNANPA()
         {
             string path = "./All.csv";
 
@@ -463,7 +463,7 @@ namespace PhoneNumbersNA.Test
         // This doesn't work because the CNA website is written using VueJS.
         // The NPA's aren't rendered unless the JS in the initial response is executed, which doesn't happen because this is not a browser.
         [Fact]
-        public async void VerifyCanadianFromCNA()
+        public void VerifyCanadianFromCNA()
         {
             string path = "./All.csv";
 
@@ -527,7 +527,7 @@ namespace PhoneNumbersNA.Test
                 {
                     if (npa > 200 && npa < 999)
                     {
-                        Assert.True(AreaCode.CanadianFlatLookup[npa], $"NPA {npa} is {AreaCode.CanadianFlatLookup[npa]} in the lookup.");
+                        Assert.True(AreaCode.CountryOrTerritoryFlatLookup[npa], $"NPA {npa} is {AreaCode.CountryOrTerritoryFlatLookup[npa]} in the lookup.");
                     }
                 }
             }
