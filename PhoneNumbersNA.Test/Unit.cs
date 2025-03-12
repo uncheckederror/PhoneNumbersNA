@@ -1,12 +1,18 @@
+using nietras.SeparatedValues;
+
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
 using Xunit;
 using Xunit.Abstractions;
+
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PhoneNumbersNA.Test
 {
@@ -47,7 +53,7 @@ namespace PhoneNumbersNA.Test
         public void ExtractNumbers()
         {
             var numbers = manyNumbers.ExtractDialedNumbers();
-            Assert.NotEqual(0,numbers.Length);
+            Assert.NotEqual(0, numbers.Length);
             Assert.True(numbers.Length is 3);
             foreach (var number in numbers)
             {
@@ -203,6 +209,7 @@ namespace PhoneNumbersNA.Test
             foreach (var npa in AreaCodes.TollFree)
             {
                 var local = npa;
+                output.WriteLine($"{local}");
                 Assert.True(npa.ToString().IsValidNPA());
                 Assert.True(npa.ToString().IsTollfree());
                 Assert.True(npa.ToString().IsNonGeographic());
@@ -319,137 +326,191 @@ namespace PhoneNumbersNA.Test
         }
 
         // Disabled because NANPA removed this report from their website.
-        //[Fact]
-        //public async void VerifyGeographicCodesFromNANPA()
-        //{
-        //    using var client = new HttpClient();
-        //    client.DefaultRequestHeaders.Clear();
-        //    string? s = null;
-        //    var content = await client.GetAsync("https://nationalnanpa.com/enas/geoAreaCodeNumberReport.do");
-        //    using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
-        //    {
-        //        s = sr.ReadToEnd();
-        //    }
-        //    var pattern = "\\d\\d\\d";
-        //    var rgx = new Regex(pattern);
+        [Fact]
+        public void VerifyGeographicCodesFromNANPA()
+        {
+            string path = "./Geographic.csv";
 
-        //    output.WriteLine(rgx.Matches(s).Count.ToString());
+            string text = File.ReadAllText(path);
 
-        //    foreach (Match match in rgx.Matches(s).Cast<Match>())
-        //    {
-        //        var checkParse = int.TryParse(match.ValueSpan, out int npa);
-        //        if (checkParse)
-        //        {
-        //            if (npa > 200 && npa < 999)
-        //            {
-        //                Assert.True(AreaCode.AllFlatLookup[npa], $"NPA {npa} is {AreaCode.AllFlatLookup[npa]} in the lookup.");
-        //            }
-        //        }
-        //    }
-        //}
+            using var reader = Sep.New(',').Reader().FromText(text);
 
-        // Disabled because NANPA removed this report from their website.
-        //[Fact]
-        //public async void VerifyNonGeographicCodesFromNANPA()
-        //{
-        //    using var client = new HttpClient();
-        //    client.DefaultRequestHeaders.Clear();
-        //    string? s = null;
-        //    var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
-        //    using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
-        //    {
-        //        s = sr.ReadToEnd();
-        //    }
-        //    var pattern = "\\d\\d\\d";
-        //    var rgx = new Regex(pattern);
+            List<Geographic> geos = [];
 
-        //    output.WriteLine(rgx.Matches(s).Count.ToString());
+            foreach (var row in reader)
+            {
+                Geographic geo = new(row["NPA"].Parse<int>(), row["Location"].ToString());
 
-        //    foreach (Match match in rgx.Matches(s).Cast<Match>())
-        //    {
-        //        var checkParse = int.TryParse(match.ValueSpan, out int npa);
-        //        if (checkParse)
-        //        {
-        //            if (npa > 499 && npa < 901)
-        //            {
-        //                Assert.True(AreaCode.NonGeographicFlatLookup[npa], $"NPA {npa} is {AreaCode.NonGeographicFlatLookup[npa]} in the lookup.");
-        //            }
-        //        }
-        //    }
-        //}
+                if (geo.NPA > 200 && geo.NPA < 999)
+                {
+                    Assert.True(AreaCode.AllFlatLookup[geo.NPA], $"NPA {geo.NPA}, {geo.Location} is {AreaCode.AllFlatLookup[geo.NPA]} in the lookup.");
+                }
+
+                geos.Add(geo);
+            }
+
+            output.WriteLine($"{geos.Count} Geographic NPAs found in NANPA.");
+            output.WriteLine($"{AreaCodes.All.Length} NPAs found in All PhoneNumberNA.");
+        }
+
+        public readonly record struct Geographic(int NPA, string Location);
 
         // Disabled because NANPA removed this report from their website.
-        //[Fact]
-        //public async void VerifyTollfreeCodesFromNANPA()
-        //{
-        //    using var client = new HttpClient();
-        //    client.DefaultRequestHeaders.Clear();
-        //    string? s = null;
-        //    var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
-        //    using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
-        //    {
-        //        s = sr.ReadToEnd();
-        //    }
-        //    var pattern = "\\d\\d\\d";
-        //    var rgx = new Regex(pattern);
+        [Fact]
+        public async void VerifyNonGeographicCodesFromNANPA()
+        {
+            string path = "./NonGeographic.csv";
 
-        //    output.WriteLine(rgx.Matches(s).Count.ToString());
+            string text = File.ReadAllText(path);
 
-        //    foreach (Match match in rgx.Matches(s).Cast<Match>())
-        //    {
-        //        var checkParse = int.TryParse(match.ValueSpan, out int npa);
-        //        if (checkParse)
-        //        {
-        //            if (npa > 799 && npa < 889)
-        //            {
-        //                output.WriteLine(npa.ToString());
-        //                Assert.True(AreaCode.TollFreeFlatLookup[npa], $"NPA {npa} is {AreaCode.TollFreeFlatLookup[npa]} not in the lookup.");
-        //            }
-        //        }
-        //    }
-        //}
+            using var reader = Sep.New(',').Reader().FromText(text);
+
+            List<Geographic> geos = [];
+
+            foreach (var row in reader)
+            {
+                Geographic geo = new(row["NPA"].Parse<int>(), row[1].ToString());
+
+                if (geo.NPA > 499 && geo.NPA < 901)
+                {
+                    Assert.True(AreaCode.NonGeographicFlatLookup[geo.NPA], $"NPA {geo.NPA}, {geo.Location} is {AreaCode.NonGeographicFlatLookup[geo.NPA]} in the lookup.");
+                }
+
+                geos.Add(geo);
+            }
+
+            output.WriteLine($"{geos.Count} NonGeographic NPAs found in NANPA.");
+            output.WriteLine($"{AreaCodes.NonGeographic.Length} NPAs found in NonGeographic PhoneNumberNA.");
+            Assert.Equal(geos.Count, AreaCodes.NonGeographic.Length);
+        }
 
         // Disabled because NANPA removed this report from their website.
-        //[Fact]
-        //public async void VerifyAllAreaCodesFromNANPA()
-        //{
-        //    using var client = new HttpClient();
-        //    client.DefaultRequestHeaders.Clear();
-        //    string? s = null;
-        //    var content = await client.GetAsync("https://www.nationalnanpa.com/enas/nonGeoNpaServiceReport.do");
-        //    using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
-        //    {
-        //        s = sr.ReadToEnd();
-        //    }
-        //    var pattern = "\\d\\d\\d";
-        //    var rgx = new Regex(pattern);
+        [Fact]
+        public async void VerifyTollfreeCodesFromNANPA()
+        {
+            string path = "./All.csv";
 
-        //    output.WriteLine(rgx.Matches(s).Count.ToString());
+            string text = File.ReadAllText(path);
 
-        //    foreach (Match match in rgx.Matches(s).Cast<Match>())
-        //    {
-        //        var checkParse = int.TryParse(match.ValueSpan, out int npa);
-        //        if (checkParse)
-        //        {
-        //            if (npa > 499 && npa < 999)
-        //            {
-        //                output.WriteLine(npa.ToString());
-        //                Assert.True(AreaCode.AllFlatLookup[npa], $"NPA {npa} is {AreaCode.AllFlatLookup[npa]} not in the lookup.");
-        //            }
-        //        }
-        //    }
+            using var reader = Sep.New(',').Reader().FromText(text);
 
-        //}
+            List<NPADetail> geos = [];
+
+            foreach (var row in reader)
+            {
+                if (row["SERVICE"].ToString().Contains("Toll-Free") && row["IN_SERVICE"].ToString() is "Y")
+                {
+                    NPADetail geo = new(row["NPA_ID"].Parse<int>(), row["SERVICE"].ToString());
+
+                    if (geo.NPA_ID > 799 && geo.NPA_ID < 889)
+                    {
+                        output.WriteLine(geo.NPA_ID.ToString());
+                        Assert.True(AreaCode.TollFreeFlatLookup[geo.NPA_ID], $"NPA {geo.NPA_ID}, {geo.SERVICE} is {AreaCode.TollFreeFlatLookup[geo.NPA_ID]} not in the lookup.");
+                    }
+
+                    geos.Add(geo);
+                }
+            }
+
+            output.WriteLine($"{geos.Count} Tollfree NPAs found in NANPA.");
+            output.WriteLine($"{AreaCodes.TollFree.Length} NPAs found in Tollfree PhoneNumberNA.");
+            Assert.Equal(geos.Count, AreaCodes.TollFree.Length);
+        }
+
+        public readonly record struct NPADetail(int NPA_ID, string SERVICE);
+
+        // Disabled because NANPA removed this report from their website.
+        [Fact]
+        public async void VerifyAllAreaCodesFromNANPA()
+        {
+            string path = "./All.csv";
+
+            string text = File.ReadAllText(path);
+
+            using var reader = Sep.New(',').Reader().FromText(text);
+
+            List<NPADetail> geos = [];
+
+            foreach (var row in reader)
+            {
+                if (row["IN_SERVICE"].ToString() is "Y")
+                {
+                    NPADetail geo = new(row["NPA_ID"].Parse<int>(), row["SERVICE"].ToString());
+
+                    if (geo.NPA_ID > 499 && geo.NPA_ID < 999)
+                    {
+                        Assert.True(AreaCode.AllFlatLookup[geo.NPA_ID], $"NPA {geo.NPA_ID} is {AreaCode.AllFlatLookup[geo.NPA_ID]} not in the lookup.");
+                    }
+
+                    geos.Add(geo);
+                }
+            }
+
+            foreach (var code in AreaCodes.All)
+            {
+                var match = geos.FirstOrDefault(x => x.NPA_ID == code);
+                if (match.NPA_ID != code)
+                {
+                    output.WriteLine($"{code} Not Found");
+                }
+            }
+
+            output.WriteLine($"{geos.Count} NPAs found in NANPA.");
+            output.WriteLine($"{AreaCodes.All.Length} NPAs found in All PhoneNumberNA.");
+            Assert.Equal(geos.Count, AreaCodes.All.Length);
+        }
 
         // This doesn't work because the CNA website is written using VueJS.
         // The NPA's aren't rendered unless the JS in the initial response is executed, which doesn't happen because this is not a browser.
         [Fact]
         public async void VerifyCanadianFromCNA()
         {
+            string path = "./All.csv";
+
+            string text = File.ReadAllText(path);
+
+            using var reader = Sep.New(',').Reader().FromText(text);
+
+            List<NPADetail> geos = [];
+
+            foreach (var row in reader)
+            {
+                if (row["IN_SERVICE"].ToString() is "Y" && row["COUNTRY"].ToString() is "CANADA")
+                {
+                    NPADetail geo = new(row["NPA_ID"].Parse<int>(), row["SERVICE"].ToString());
+
+                    if (geo.NPA_ID > 499 && geo.NPA_ID < 999)
+                    {
+                        Assert.True(AreaCode.CanadianFlatLookup[geo.NPA_ID], $"NPA {geo.NPA_ID} is {AreaCode.CanadianFlatLookup[geo.NPA_ID]} not in the lookup.");
+                    }
+
+                    geos.Add(geo);
+                }
+            }
+
+            foreach (var code in AreaCodes.Canadian)
+            {
+                var match = geos.FirstOrDefault(x => x.NPA_ID == code);
+                if (match.NPA_ID != code)
+                {
+                    output.WriteLine($"{code} Not Found");
+                }
+            }
+
+            output.WriteLine($"{geos.Count} Canadian NPAs found in NANPA.");
+            output.WriteLine($"{AreaCodes.Canadian.Length} NPAs found in Canadian PhoneNumberNA.");
+            Assert.Equal(geos.Count, AreaCodes.Canadian.Length);
+        }
+
+        // This is also broken, perhaps we can use the All CSV?
+        // https://www.nanpa.com/resources/area-code-map/territories
+        [Fact]
+        public async void VerifyCountryOrTerritoryFromNANPA()
+        {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
             string? s = null;
-            var content = await client.GetAsync("https://cnac.ca/co_codes/co_code_lookup.htm");
+            var content = await client.GetAsync("https://www.nanpa.com/resources/area-code-map/territories");
             using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
             {
                 s = sr.ReadToEnd();
@@ -467,35 +528,6 @@ namespace PhoneNumbersNA.Test
                     if (npa > 200 && npa < 999)
                     {
                         Assert.True(AreaCode.CanadianFlatLookup[npa], $"NPA {npa} is {AreaCode.CanadianFlatLookup[npa]} in the lookup.");
-                    }
-                }
-            }
-        }
-
-        [Fact]
-        public async void VerifyCountryOrTerritoryFromNANPA()
-        {
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Clear();
-            string? s = null;
-            var content = await client.GetAsync("https://nationalnanpa.com/area_code_maps/area_code_maps_Country_Territory.html");
-            using (var sr = new StreamReader(await content.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
-            {
-                s = sr.ReadToEnd();
-            }
-            var pattern = "(?:[>])(\\d\\d\\d)(?:[<])";
-            var rgx = new Regex(pattern);
-
-            output.WriteLine(rgx.Matches(s).Count.ToString());
-
-            foreach (Match match in rgx.Matches(s).Cast<Match>())
-            {
-                var checkParse = int.TryParse(match.ValueSpan, out int npa);
-                if (checkParse)
-                {
-                    if (npa > 200 && npa < 999)
-                    {
-                        Assert.True(AreaCode.CountryOrTerritoryFlatLookup[npa], $"NPA {npa} is {AreaCode.CountryOrTerritoryFlatLookup[npa]} in the lookup.");
                     }
                 }
             }
