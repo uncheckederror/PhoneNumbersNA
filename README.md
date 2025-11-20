@@ -59,7 +59,7 @@ to get a Boolean as an answer.
 This library is used in production by [Accelerate Networks](https://github.com/AccelerateNetworks/NumberSearch) and grew organically out of a large set of utility functions that have now been condensed into PhoneNumbersNA. 🥳
 
 ### Performance 🚅 ###
-You can run the benchmarks for this library on your local machine by cloning this repo and then opening the solution file in Visual Studio 2022. Select the PhoneNumbersNA.Benchmark console app and then run it as a "Release" build. The benchmarks typically take about 3 minutes to run. Alternatively you can install the .NET SDK and use .NET CLI to build the project in release mode and run it.
+You can run the benchmarks for this library on your local machine by cloning this repo and then opening the solution file in Visual Studio 2026. Select the PhoneNumbersNA.Benchmark console app and then run it as a "Release" build. The benchmarks typically take about 3 minutes to run. Alternatively you can install the .NET SDK and use .NET CLI to build the project in release mode and run it.
 
 Here are the benchmarks for the current version of PhoneNumbersNA:
 
@@ -82,6 +82,6 @@ Please start by creating a new issue with a description of the problem and a met
   
 ### How to run this project locally 🏃 ###
   * Clone the repo to your machine
-  * .NET 8.0 or greater is required (included in Visual Studio 2022)
-  * Use [Visual Studio 2022 Community Edition](https://visualstudio.microsoft.com/vs/preview/) or VSCode with the dotnet CLI and CSharp language extension to edit, build, and run the test suite.
-  * Double click the "PhoneNumbersNA.sln" file to open the solution in Visual Studio 2022.
+  * .NET 10.0 or greater is required (included in Visual Studio 2026)
+  * Use [Visual Studio 2026 Community Edition](https://visualstudio.microsoft.com/) or VSCode with the dotnet CLI and CSharp language extension to edit, build, and run the test suite.
+  * Double click the "PhoneNumbersNA.sln" file to open the solution in Visual Studio 2026.
