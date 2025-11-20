@@ -505,7 +505,7 @@ namespace PhoneNumbersNA.Test
         // This is also broken, perhaps we can use the All CSV?
         // https://www.nanpa.com/resources/area-code-map/territories
         [Fact]
-        public async void VerifyCountryOrTerritoryFromNANPA()
+        public async Task VerifyCountryOrTerritoryFromNANPA()
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Clear();
